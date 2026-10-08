@@ -126,28 +126,7 @@ python -m lender seed --force (discard existing data and start over)
 ```
 Seeding twice is refused unless `--force` is passed, so it will not overwrite a store by accident.
 
-### global flags (must come BEFORE the command)
+### running tests
 ```txt
-python -m lender --data-dir ./somewhere-else list-resources (use a different store; default is ./data)
-python -m lender --actor grace checkout R001 F001 2 (name recorded on every event you write; default is admin)
-python -m lender --json list-resources (machine-readable output instead of tables)
-python -m lender --version
-```
-Putting a global flag after the command is an error: `lender: error: unrecognized arguments: --json`
-
-### exit codes
-```txt
-0 success
-1 general error
-2 validation error (bad input, bad quantity, bad date)
-3 not found (unknown resource, borrower, loan or group)
-4 conflict (duplicate ID, not enough stock, over-return)
-5 invariant violation (stored data does not add up)
-6 storage error (unreadable or unwritable data directory)
-7 import conflict
-```
-
-### running the tests
-```txt
-python -m unittest discover -s tests (from the root directory)
+python -m unittest discover -s tests (from the root directory) (full test suite)
 ```
