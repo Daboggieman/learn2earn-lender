@@ -96,3 +96,58 @@ fellow/
 13. identify all tied leader
 14. No frameworks, databases, external services, or third-party packages 15. required. Use Python standard library only.
 15. application should run locally
+
+## run the application
+### fomr the root directory run 
+```txt
+python -m lender menu (for the interactive menu)
+python -m lender --help (to see documentations on all available commands and flags)
+python -m lender list-resources
+python -m lender list-borrowers --cohort july-cohort
+python -m lender checkout R004 F001 2 --days 7
+python -m lender report-store-status
+python -m lender report-low-stock
+python -m lender report-most-borrowed
+
+```
+### from any directory (works from any directory)
+```txt
+python path-to-application-folder\learn2earn-lender\lender.py menu
+```
+
+### if the store is empty
+The repository ships with a populated `data/` directory, so this is only needed
+if `data/` is missing or you are pointing `--data-dir` somewhere new.
+
+```txt
+python -m lender seed (start from the baseline stock)
+python -m lender seed --mock-fellows 400 --mock-piscine 120 --mock-equipment 60 --mock-cohorts 5 --mock-trials 10 --mock-loans 400 (a full mock dataset)
+python -m lender seed --force (discard existing data and start over)
+```
+Seeding twice is refused unless `--force` is passed, so it will not overwrite a store by accident.
+
+### global flags (must come BEFORE the command)
+```txt
+python -m lender --data-dir ./somewhere-else list-resources (use a different store; default is ./data)
+python -m lender --actor grace checkout R001 F001 2 (name recorded on every event you write; default is admin)
+python -m lender --json list-resources (machine-readable output instead of tables)
+python -m lender --version
+```
+Putting a global flag after the command is an error: `lender: error: unrecognized arguments: --json`
+
+### exit codes
+```txt
+0 success
+1 general error
+2 validation error (bad input, bad quantity, bad date)
+3 not found (unknown resource, borrower, loan or group)
+4 conflict (duplicate ID, not enough stock, over-return)
+5 invariant violation (stored data does not add up)
+6 storage error (unreadable or unwritable data directory)
+7 import conflict
+```
+
+### running the tests
+```txt
+python -m unittest discover -s tests (from the root directory)
+```
