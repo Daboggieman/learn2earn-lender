@@ -77,7 +77,7 @@ def register(subparsers: argparse._SubParsersAction) -> None:
         choices=DATASETS,
         help="Which records to write; required for CSV",
     )
-    export.set_defaults(handler=cmd_export)
+    export.set_defaults(handler=cmd_export, writes=False)
 
     importer = subparsers.add_parser(
         "import", help="Load JSON or CSV data into the store"

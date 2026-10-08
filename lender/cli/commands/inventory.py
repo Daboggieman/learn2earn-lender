@@ -43,12 +43,12 @@ def register(subparsers: argparse._SubParsersAction) -> None:
     listing.add_argument("--category", help="Limit to a category")
     listing.add_argument("--subcategory", help="Limit to a subcategory")
     listing.add_argument("--all", action="store_true", help="Include removed resources")
-    listing.set_defaults(handler=cmd_list_resources)
+    listing.set_defaults(handler=cmd_list_resources, writes=False)
 
     find = subparsers.add_parser("find-resource", help="Find resources by ID or name")
     find.add_argument("term", help="ID, exact name, or partial name")
     find.add_argument("--all", action="store_true", help="Include removed resources")
-    find.set_defaults(handler=cmd_find_resource)
+    find.set_defaults(handler=cmd_find_resource, writes=False)
 
     by_category = subparsers.add_parser(
         "find-by-category", help="Find resources in a category"
@@ -56,7 +56,7 @@ def register(subparsers: argparse._SubParsersAction) -> None:
     by_category.add_argument("category", help="Category ID or name")
     by_category.add_argument("--subcategory", help="Limit to a subcategory")
     by_category.add_argument("--all", action="store_true", help="Include removed resources")
-    by_category.set_defaults(handler=cmd_find_by_category)
+    by_category.set_defaults(handler=cmd_find_by_category, writes=False)
 
     mark = subparsers.add_parser(
         "mark-condition", help="Move units into or out of a condition bucket"

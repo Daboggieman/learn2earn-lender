@@ -51,7 +51,7 @@ def register(subparsers: argparse._SubParsersAction) -> None:
     )
     status.add_argument("--all", action="store_true", help="Include removed resources")
     add_export_options(status)
-    status.set_defaults(handler=cmd_store_status)
+    status.set_defaults(handler=cmd_store_status, writes=False)
 
     inventory = subparsers.add_parser(
         "report-inventory", help="Summarise inventory levels by category"
@@ -59,19 +59,19 @@ def register(subparsers: argparse._SubParsersAction) -> None:
     inventory.add_argument("--category", help="Limit to a category")
     inventory.add_argument("--all", action="store_true", help="Include removed resources")
     add_export_options(inventory)
-    inventory.set_defaults(handler=cmd_inventory_report)
+    inventory.set_defaults(handler=cmd_inventory_report, writes=False)
 
     low = subparsers.add_parser(
         "report-low-stock", help="Resources with fewer than 3 available units"
     )
     add_export_options(low)
-    low.set_defaults(handler=cmd_low_stock)
+    low.set_defaults(handler=cmd_low_stock, writes=False)
 
     most = subparsers.add_parser(
         "report-most-borrowed", help="Resource(s) with the most units currently borrowed"
     )
     add_export_options(most)
-    most.set_defaults(handler=cmd_most_borrowed)
+    most.set_defaults(handler=cmd_most_borrowed, writes=False)
 
 
 def _status_row(row, ctx: Context) -> list[object]:

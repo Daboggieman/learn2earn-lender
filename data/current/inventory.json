@@ -1259,6 +1259,26 @@
       "created_at": "2026-01-02T08:01:00",
       "updated_at": "2031-02-16T04:10:30",
       "notes": ""
+    },
+    {
+      "id": "R064",
+      "name": "phones",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-phones",
+      "total_quantity": 30,
+      "available_quantity": 30,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 0,
+      "status": "active",
+      "created_at": "2026-10-08T16:48:41",
+      "updated_at": "2026-10-08T16:48:41",
+      "notes": "test"
     }
   ]
 }

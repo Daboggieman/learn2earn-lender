@@ -13,7 +13,7 @@ def register(subparsers: argparse._SubParsersAction) -> None:
 
     listing = subparsers.add_parser("list-categories", help="List equipment categories")
     listing.add_argument("--all", action="store_true", help="Include removed categories")
-    listing.set_defaults(handler=cmd_list_categories)
+    listing.set_defaults(handler=cmd_list_categories, writes=False)
 
     update = subparsers.add_parser("update-category", help="Rename a category")
     update.add_argument("category", help="Category ID or name")
@@ -32,7 +32,7 @@ def register(subparsers: argparse._SubParsersAction) -> None:
     list_sub = subparsers.add_parser("list-subcategories", help="List subcategories")
     list_sub.add_argument("category", nargs="?", help="Limit to one category")
     list_sub.add_argument("--all", action="store_true", help="Include removed subcategories")
-    list_sub.set_defaults(handler=cmd_list_subcategories)
+    list_sub.set_defaults(handler=cmd_list_subcategories, writes=False)
 
     update_sub = subparsers.add_parser("update-subcategory", help="Rename a subcategory")
     update_sub.add_argument("subcategory", help="Subcategory ID or name")

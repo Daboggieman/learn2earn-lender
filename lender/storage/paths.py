@@ -7,6 +7,7 @@ PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 PROJECT_ROOT = PACKAGE_ROOT.parent
 
 DEFAULT_DATA_DIRNAME = "data"
+LOCK_FILENAME = ".lender.lock"
 
 
 @dataclass(frozen=True)
@@ -32,6 +33,10 @@ class DataPaths:
     @property
     def transactions_dir(self) -> Path:
         return self.root / "transactions"
+
+    @property
+    def lock_file(self) -> Path:
+        return self.root / LOCK_FILENAME
 
     @property
     def inventory_file(self) -> Path:

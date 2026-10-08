@@ -58,18 +58,18 @@ def register(subparsers: argparse._SubParsersAction) -> None:
     history.add_argument(
         "--open", action="store_true", help="Only show loans still outstanding"
     )
-    history.set_defaults(handler=cmd_history)
+    history.set_defaults(handler=cmd_history, writes=False)
 
     overdue = subparsers.add_parser("overdue", help="Show loans past their due date")
     overdue.add_argument("--borrower", help="Limit to one borrower")
-    overdue.set_defaults(handler=cmd_overdue)
+    overdue.set_defaults(handler=cmd_overdue, writes=False)
 
     borrower = subparsers.add_parser(
         "report-borrower-history", help="Full lending history for one borrower"
     )
     borrower.add_argument("borrower", help="Borrower ID")
     add_export_options(borrower)
-    borrower.set_defaults(handler=cmd_report_borrower_history)
+    borrower.set_defaults(handler=cmd_report_borrower_history, writes=False)
 
 
 def _loan_row(loan: Transaction, ctx: Context) -> list[object]:

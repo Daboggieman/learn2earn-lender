@@ -3,9 +3,12 @@ from __future__ import annotations
 import argparse
 import sys
 from collections.abc import Sequence
+from contextlib import nullcontext
 
 from .. import __version__
 from ..domain.errors import LenderError
+from ..storage.locking import store_lock
+from ..storage.paths import DataPaths
 from ..storage.store import Store
 from . import output
 from .commands import register_all
@@ -86,10 +89,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     subparsers = parser.add_subparsers(dest="command", metavar="COMMAND", required=True)
+    parser.set_defaults(writes=True)
     menu = subparsers.add_parser(
         "menu", help="Pick actions from an interactive menu (loops until you exit)"
     )
-    menu.set_defaults(handler=cmd_menu)
+    menu.set_defaults(handler=cmd_menu, writes=False)
     register_all(subparsers)
     return parser
 
@@ -100,15 +104,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     try:
-        store = Store.open(args.data_dir)
-    except LenderError as exc:
-        output.fail(str(exc))
-        return exc.exit_code
-
-    ctx = Context.build(store, actor=args.actor, as_json=args.as_json)
-
-    try:
-        return args.handler(args, ctx)
+        paths = DataPaths.at(args.data_dir) if args.data_dir else DataPaths.default()
+        paths.ensure()
+        guard = store_lock(paths) if args.writes else nullcontext()
+        with guard:
+            store = Store(paths)
+            ctx = Context.build(store, actor=args.actor, as_json=args.as_json)
+            return args.handler(args, ctx)
     except LenderError as exc:
         output.fail(str(exc))
         return exc.exit_code

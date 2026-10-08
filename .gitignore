@@ -9,3 +9,4 @@ venv/
 .ruff_cache/
 
 # data/ directory is intentionally tracked
+.lender.lock

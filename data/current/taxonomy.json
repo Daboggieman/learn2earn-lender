@@ -73,6 +73,15 @@
       "updated_at": "2026-01-01T08:00:03"
     },
     {
+      "id": "electronics-phones",
+      "name": "phones",
+      "type": "subcategory",
+      "parent_id": "electronics",
+      "status": "active",
+      "created_at": "2026-10-08T16:48:06",
+      "updated_at": "2026-10-08T16:48:06"
+    },
+    {
       "id": "utilities",
       "name": "Utilities",
       "type": "category",

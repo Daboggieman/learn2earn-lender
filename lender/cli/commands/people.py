@@ -29,12 +29,12 @@ def register(subparsers: argparse._SubParsersAction) -> None:
         "--type", choices=["fellow", "piscine"], help="Limit to one borrower type"
     )
     listing.add_argument("--all", action="store_true", help="Include removed borrowers")
-    listing.set_defaults(handler=cmd_list_borrowers)
+    listing.set_defaults(handler=cmd_list_borrowers, writes=False)
 
     find = subparsers.add_parser("find-borrower", help="Find a borrower by ID or name")
     find.add_argument("term", help="ID, exact name, or partial name")
     find.add_argument("--all", action="store_true", help="Include removed borrowers")
-    find.set_defaults(handler=cmd_find_borrower)
+    find.set_defaults(handler=cmd_find_borrower, writes=False)
 
     cohort = subparsers.add_parser("add-cohort", help="Create a cohort group")
     cohort.add_argument("name", help="Cohort name, e.g. cluster-1-feb")
@@ -47,7 +47,7 @@ def register(subparsers: argparse._SubParsersAction) -> None:
     groups = subparsers.add_parser("list-groups", help="List cohorts and trial groups")
     groups.add_argument("--type", choices=["cohort", "trial"], help="Limit to one type")
     groups.add_argument("--all", action="store_true", help="Include archived groups")
-    groups.set_defaults(handler=cmd_list_groups)
+    groups.set_defaults(handler=cmd_list_groups, writes=False)
 
 
 def _group_label(ctx: Context, person) -> str:
