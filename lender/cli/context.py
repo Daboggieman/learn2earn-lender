@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from ..services.import_export_service import ImportExportService
 from ..services.inventory_service import InventoryService
 from ..services.lending_service import LendingService
 from ..services.people_service import PeopleService
@@ -20,6 +21,7 @@ class Context:
     people: PeopleService
     lending: LendingService
     reporting: ReportingService
+    transfer: ImportExportService
 
     @classmethod
     def build(cls, store: Store, *, actor: str, as_json: bool) -> "Context":
@@ -33,4 +35,5 @@ class Context:
             people=PeopleService(store),
             lending=LendingService(store),
             reporting=ReportingService(store, taxonomy),
+            transfer=ImportExportService(store),
         )

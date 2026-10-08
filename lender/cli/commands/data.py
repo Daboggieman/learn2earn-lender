@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import argparse
 from datetime import timedelta
+from pathlib import Path
 
 from .. import output
 from ..context import Context
-from ...domain.errors import ConflictError
+from ...domain.errors import ConflictError, ValidationError
+from ...services.import_export_service import DATASETS, FORMATS, IMPORT_MODES
 from ...storage import json_repository
 from ...storage.seed_data import (
     SEED_START,
@@ -41,6 +43,58 @@ def register(subparsers: argparse._SubParsersAction) -> None:
         help="Discard existing data and start over (destructive)",
     )
     seed.set_defaults(handler=cmd_seed)
+
+    export = subparsers.add_parser(
+        "export", help="Write the store out as JSON, or one dataset as CSV"
+    )
+    export.add_argument("--out", required=True, help="File to write")
+    export.add_argument(
+        "--format",
+        dest="fmt",
+        choices=FORMATS,
+        help="Output format (default: taken from the file extension)",
+    )
+    export.add_argument(
+        "--dataset",
+        choices=DATASETS,
+        help="Which records to write; required for CSV",
+    )
+    export.set_defaults(handler=cmd_export)
+
+    importer = subparsers.add_parser(
+        "import", help="Load JSON or CSV data into the store"
+    )
+    importer.add_argument("path", help="File to read")
+    importer.add_argument(
+        "--format",
+        dest="fmt",
+        choices=FORMATS,
+        help="Input format (default: taken from the file extension)",
+    )
+    importer.add_argument(
+        "--dataset",
+        choices=DATASETS,
+        help="Which records the file holds; required for CSV",
+    )
+    importer.add_argument(
+        "--mode",
+        choices=IMPORT_MODES,
+        default="merge",
+        help="merge keeps existing data and adds to it; replace discards it first",
+    )
+    importer.set_defaults(handler=cmd_import)
+
+
+def _resolve_format(explicit: str | None, path: str | Path) -> str:
+    if explicit:
+        return explicit
+    suffix = Path(path).suffix.lower().lstrip(".")
+    if suffix in FORMATS:
+        return suffix
+    raise ValidationError(
+        f"cannot tell the format of {str(path)!r} from its name; "
+        f"pass --format {' or --format '.join(FORMATS)}"
+    )
 
 
 def _wipe(ctx: Context) -> int:
@@ -109,4 +163,53 @@ def cmd_seed(args: argparse.Namespace, ctx: Context) -> int:
         f"{summary['resources']} resources, {summary['people']} borrowers, "
         f"{summary['loans']} loans."
     )
+    return 0
+
+
+def cmd_export(args: argparse.Namespace, ctx: Context) -> int:
+    fmt = _resolve_format(args.fmt, args.out)
+    summary = ctx.transfer.write_export(args.out, fmt=fmt, dataset=args.dataset)
+
+    if ctx.as_json:
+        output.print_json(summary)
+        return 0
+
+    if fmt == "json":
+        output.info(
+            f"Exported {summary['events']} event(s) to {summary['path']}."
+        )
+    else:
+        output.info(
+            f"Exported {summary['rows']} {summary['dataset']} row(s) "
+            f"to {summary['path']}."
+        )
+    return 0
+
+
+def cmd_import(args: argparse.Namespace, ctx: Context) -> int:
+    fmt = _resolve_format(args.fmt, args.path)
+    summary = ctx.transfer.import_file(
+        args.path, fmt=fmt, dataset=args.dataset, mode=args.mode
+    )
+
+    if ctx.as_json:
+        output.print_json(summary)
+        return 0
+
+    if summary["mode"] == "replace":
+        output.info(
+            f"Replaced the store with {summary['imported']} event(s) "
+            f"from {summary['source']}."
+        )
+    else:
+        skipped = (
+            f", skipped {summary['skipped']} already-present event(s)"
+            if summary["skipped"]
+            else ""
+        )
+        output.info(
+            f"Imported {summary['imported']} event(s) from {summary['source']}"
+            f"{skipped}."
+        )
+    output.info(f"The store now holds {summary['total_events']} event(s).")
     return 0
