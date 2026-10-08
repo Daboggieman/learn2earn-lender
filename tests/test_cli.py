@@ -245,6 +245,98 @@ class InventoryCommandTests(CliTestCase):
         self.assertEqual(sorted(row["id"] for row in restored), ["R002", "R003"])
 
 
+class PeopleCommandTests(CliTestCase):
+    def setUp(self):
+        super().setUp()
+        self.seed()
+
+    def test_list_groups_shows_seeded_cohorts_and_trials(self):
+        code, out, err = self.run_cli("list-groups")
+        self.assertEqual(code, 0, err)
+        self.assertIn("cluster-1-feb", out)
+        self.assertIn("trial-period-1", out)
+
+    def test_list_groups_filters_by_type(self):
+        payload = self.run_json("list-groups", "--type", "trial")
+        self.assertTrue(all(group["type"] == "trial" for group in payload))
+        self.assertEqual(len(payload), 6)
+
+    def test_add_cohort_creates_a_group(self):
+        payload = self.run_json("add-cohort", "cluster-5-mar")
+        self.assertEqual(payload["name"], "cluster-5-mar")
+        self.assertEqual(payload["type"], "cohort")
+
+    def test_add_trial_creates_a_group(self):
+        payload = self.run_json("add-trial", "trial-period-7")
+        self.assertEqual(payload["type"], "trial")
+
+    def test_duplicate_group_name_conflicts(self):
+        code, out, err = self.run_cli("add-cohort", "cluster-1-feb")
+        self.assertEqual(code, 4)
+
+    def test_add_fellow_lands_in_the_named_cohort(self):
+        payload = self.run_json("add-fellow", "Ada Lovelace", "--cohort", "cluster-1-feb")
+        self.assertEqual(payload["id"], "F004")
+        self.assertEqual(payload["type"], "fellow")
+        self.assertEqual(payload["group_name"], "cluster-1-feb")
+
+    def test_add_piscine_uses_a_p_prefixed_id(self):
+        payload = self.run_json("add-piscine", "Alan Turing", "--trial", "trial-period-1")
+        self.assertEqual(payload["id"], "P001")
+        self.assertEqual(payload["type"], "piscine")
+
+    def test_add_fellow_to_a_trial_group_is_refused(self):
+        code, out, err = self.run_cli(
+            "add-fellow", "Grace Hopper", "--cohort", "trial-period-1"
+        )
+        self.assertEqual(code, 3)
+
+    def test_add_fellow_to_an_unknown_cohort_is_refused(self):
+        code, out, err = self.run_cli("add-fellow", "Nobody", "--cohort", "ghost")
+        self.assertEqual(code, 3)
+
+    def test_duplicate_borrower_name_conflicts(self):
+        self.run_cli("add-fellow", "Ada Lovelace", "--cohort", "cluster-1-feb")
+        code, out, err = self.run_cli("add-fellow", "Ada Lovelace", "--cohort", "cluster-1-feb")
+        self.assertEqual(code, 4)
+
+    def test_list_borrowers_shows_the_seeded_borrowers(self):
+        code, out, err = self.run_cli("list-borrowers")
+        self.assertEqual(code, 0, err)
+        for name in ("Ada", "John", "Grace"):
+            self.assertIn(name, out)
+
+    def test_list_borrowers_filters_by_cohort(self):
+        payload = self.run_json("list-borrowers", "--cohort", "cluster-1-feb")
+        self.assertEqual([row["id"] for row in payload], ["F001"])
+
+    def test_list_borrowers_filters_by_type(self):
+        self.run_cli("add-piscine", "Alan Turing", "--trial", "trial-period-1")
+        payload = self.run_json("list-borrowers", "--type", "piscine")
+        self.assertEqual([row["id"] for row in payload], ["P001"])
+
+    def test_list_borrowers_rejects_both_group_filters(self):
+        code, out, err = self.run_cli(
+            "list-borrowers", "--cohort", "cluster-1-feb", "--trial", "trial-period-1"
+        )
+        self.assertEqual(code, 2)
+
+    def test_find_borrower_matches_a_partial_name(self):
+        payload = self.run_json("find-borrower", "ada")
+        self.assertEqual([row["id"] for row in payload], ["F001"])
+
+    def test_find_borrower_with_no_match_is_an_empty_result(self):
+        code, out, err = self.run_cli("find-borrower", "nobody")
+        self.assertEqual(code, 0)
+        self.assertIn("No borrower matches", out)
+
+    def test_borrowers_survive_a_reseed_of_the_log(self):
+        self.run_cli("add-fellow", "Ada Lovelace", "--cohort", "cluster-1-feb")
+        store = Store.open(self.data_dir)
+        self.assertIn("F004", store.state.people)
+        self.assertEqual(store.state.people["F004"].name, "Ada Lovelace")
+
+
 class ReportCommandTests(CliTestCase):
     def setUp(self):
         super().setUp()

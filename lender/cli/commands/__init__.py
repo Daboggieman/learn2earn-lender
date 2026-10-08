@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from . import data, inventory, reports, taxonomy
+from . import data, inventory, lending, people, reports, taxonomy
 
-MODULES = (taxonomy, inventory, reports, data)
+MODULES = (taxonomy, inventory, people, lending, reports, data)
 
 
 def register_all(subparsers) -> None:
