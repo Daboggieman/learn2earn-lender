@@ -8,10 +8,13 @@ from pathlib import Path
 from lender.domain.events import EventType
 from lender.storage.projections import rebuild
 from lender.storage.seed_data import (
+    SEED_COHORTS,
     SEED_START,
+    SEED_TRIALS,
     baseline_events,
     category_id,
     entity_ids,
+    group_index,
     mock_events,
     renumber_events,
     subcategory_id,
@@ -45,7 +48,11 @@ class BaselineSeedTests(unittest.TestCase):
 
     def test_baseline_groups_and_people(self):
         state = rebuild(self.events)
-        self.assertEqual(len(state.groups), 11)
+        self.assertEqual(len(state.groups), len(SEED_COHORTS) + len(SEED_TRIALS))
+        self.assertEqual(
+            sorted(group.name for group in state.groups.values()),
+            sorted(SEED_COHORTS + SEED_TRIALS),
+        )
         self.assertEqual(sorted(state.people), ["F001", "F002", "F003"])
         self.assertEqual(state.people["F001"].name, "Ada")
 
@@ -204,6 +211,39 @@ class MockSeedTests(unittest.TestCase):
         self.assertFalse(
             any(event.event_type is EventType.TAXONOMY_CREATED for event in events)
         )
+
+    def test_mock_groups_are_the_canonical_names(self):
+        state = rebuild(mock_events(fellows=6, piscine=6))
+        self.assertEqual(
+            sorted(group.name for group in state.groups.values()),
+            sorted(SEED_COHORTS + SEED_TRIALS),
+        )
+
+    def test_mock_groups_can_be_filled_from_groups_the_caller_already_made(self):
+        baseline = baseline_events()
+        events = mock_events(
+            fellows=6,
+            piscine=6,
+            emit_taxonomy=False,
+            emit_groups=False,
+            groups=group_index(baseline),
+            reserved_ids=entity_ids(baseline),
+        )
+        self.assertFalse(
+            any(event.event_type is EventType.GROUP_CREATED for event in events)
+        )
+        state = rebuild(baseline + events)
+        self.assertEqual(len(state.groups), len(SEED_COHORTS) + len(SEED_TRIALS))
+        names_by_id = {group.id: group.name for group in state.groups.values()}
+        canonical = set(SEED_COHORTS + SEED_TRIALS)
+        for person in state.people.values():
+            self.assertIn(names_by_id[person.group_id], canonical)
+
+    def test_more_groups_than_are_defined_is_rejected(self):
+        with self.assertRaises(ValueError):
+            mock_events(cohorts=len(SEED_COHORTS) + 1)
+        with self.assertRaises(ValueError):
+            mock_events(trials=len(SEED_TRIALS) + 1)
 
     def test_mock_loans_reference_mock_borrowers(self):
         events = self.build(fellows=10, piscine=5, loans=40)
