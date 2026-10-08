@@ -5,7 +5,7 @@
     {
       "event_id": "E-20310607-0001",
       "event_type": "loan.returned",
-      "occurred_at": "2031-06-07T15:51:30",
+      "occurred_at": "2031-06-07T15:51:12",
       "actor": "system",
       "payload": {
         "transaction_id": "T000594",
@@ -22,14 +22,14 @@
     {
       "event_id": "E-20310607-0002",
       "event_type": "loan.checked_out",
-      "occurred_at": "2031-06-07T21:57:25",
+      "occurred_at": "2031-06-07T21:57:07",
       "actor": "system",
       "payload": {
         "transaction_id": "T000595",
         "resource_id": "R062",
         "borrower_id": "P040",
         "quantity": 2,
-        "due_at": "2031-06-21T21:57:25",
+        "due_at": "2031-06-21T21:57:07",
         "condition_on_issue": "good",
         "issued_by": "admin",
         "notes": "mock checkout"

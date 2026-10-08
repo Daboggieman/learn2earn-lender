@@ -5,7 +5,7 @@
     {
       "event_id": "E-20310404-0001",
       "event_type": "loan.returned",
-      "occurred_at": "2031-04-04T07:33:13",
+      "occurred_at": "2031-04-04T07:32:55",
       "actor": "system",
       "payload": {
         "transaction_id": "T000579",

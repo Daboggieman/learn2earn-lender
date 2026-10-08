@@ -8,6 +8,7 @@ import unittest
 from pathlib import Path
 
 from lender.cli.app import main
+from lender.storage.seed_data import SEED_COHORTS, SEED_TRIALS
 from lender.storage.store import Store
 
 
@@ -115,6 +116,38 @@ class SeedCommandTests(CliTestCase):
         first = self.run_json("seed", "--mock-fellows", "15", "--mock-loans", "20")
         second = self.run_json("seed", "--force", "--mock-fellows", "15", "--mock-loans", "20")
         self.assertEqual(first["events"], second["events"])
+
+    def test_seeded_groups_are_exactly_the_canonical_cohorts_and_trials(self):
+        self.seed()
+        rows = self.run_json("list-groups")
+        self.assertEqual(sorted(row["name"] for row in rows), sorted(SEED_COHORTS + SEED_TRIALS))
+
+    def test_mock_seed_reuses_the_canonical_groups_instead_of_inventing_its_own(self):
+        self.run_json(
+            "seed", "--mock-fellows", "40", "--mock-piscine", "20", "--mock-loans", "30"
+        )
+        rows = self.run_json("list-groups")
+        self.assertEqual(sorted(row["name"] for row in rows), sorted(SEED_COHORTS + SEED_TRIALS))
+        enrolled = {row["group_name"] for row in self.run_json("list-borrowers") if row["group_name"]}
+        self.assertTrue(enrolled.issubset(set(SEED_COHORTS + SEED_TRIALS)))
+
+    def test_seeding_more_groups_than_are_defined_is_a_validation_error(self):
+        code, out, err = self.run_cli("seed", "--mock-cohorts", str(len(SEED_COHORTS) + 1))
+        self.assertEqual(code, 2)
+        self.assertIn("only 5 cohorts exist", err)
+
+    def test_force_reseed_leaves_the_projections_matching_the_log(self):
+        self.run_json(
+            "seed", "--mock-fellows", "12", "--mock-piscine", "6", "--mock-equipment", "4"
+        )
+        self.run_json("seed", "--force")
+        document = json.loads(
+            (Path(self.data_dir) / "current" / "groups.json").read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            sorted(group["name"] for group in document["groups"]),
+            sorted(SEED_COHORTS + SEED_TRIALS),
+        )
 
     def test_mock_seed_keeps_resource_ids_unique(self):
         self.seed()
@@ -262,12 +295,12 @@ class PeopleCommandTests(CliTestCase):
         code, out, err = self.run_cli("list-groups")
         self.assertEqual(code, 0, err)
         self.assertIn("cluster-1-feb", out)
-        self.assertIn("trial-period-1", out)
+        self.assertIn("january-2026-trial", out)
 
     def test_list_groups_filters_by_type(self):
         payload = self.run_json("list-groups", "--type", "trial")
         self.assertTrue(all(group["type"] == "trial" for group in payload))
-        self.assertEqual(len(payload), 6)
+        self.assertEqual(len(payload), 10)
 
     def test_add_cohort_creates_a_group(self):
         payload = self.run_json("add-cohort", "cluster-5-mar")
@@ -289,13 +322,13 @@ class PeopleCommandTests(CliTestCase):
         self.assertEqual(payload["group_name"], "cluster-1-feb")
 
     def test_add_piscine_uses_a_p_prefixed_id(self):
-        payload = self.run_json("add-piscine", "Alan Turing", "--trial", "trial-period-1")
+        payload = self.run_json("add-piscine", "Alan Turing", "--trial", "january-2026-trial")
         self.assertEqual(payload["id"], "P001")
         self.assertEqual(payload["type"], "piscine")
 
     def test_add_fellow_to_a_trial_group_is_refused(self):
         code, out, err = self.run_cli(
-            "add-fellow", "Grace Hopper", "--cohort", "trial-period-1"
+            "add-fellow", "Grace Hopper", "--cohort", "january-2026-trial"
         )
         self.assertEqual(code, 3)
 
@@ -319,13 +352,13 @@ class PeopleCommandTests(CliTestCase):
         self.assertEqual([row["id"] for row in payload], ["F001"])
 
     def test_list_borrowers_filters_by_type(self):
-        self.run_cli("add-piscine", "Alan Turing", "--trial", "trial-period-1")
+        self.run_cli("add-piscine", "Alan Turing", "--trial", "january-2026-trial")
         payload = self.run_json("list-borrowers", "--type", "piscine")
         self.assertEqual([row["id"] for row in payload], ["P001"])
 
     def test_list_borrowers_rejects_both_group_filters(self):
         code, out, err = self.run_cli(
-            "list-borrowers", "--cohort", "cluster-1-feb", "--trial", "trial-period-1"
+            "list-borrowers", "--cohort", "cluster-1-feb", "--trial", "january-2026-trial"
         )
         self.assertEqual(code, 2)
 
@@ -710,8 +743,9 @@ class ReportExportCommandTests(CliTestCase):
         self.assertTrue(path.read_text(encoding="utf-8").startswith("id,name"))
 
     def test_exporting_a_report_does_not_touch_the_transaction_log(self):
+        before = len(Store.open(self.data_dir).log.read_all())
         self.run_cli("report-store-status", "--out", str(self.files / "status.json"))
-        self.assertEqual(len(Store.open(self.data_dir).log.read_all()), 29)
+        self.assertEqual(len(Store.open(self.data_dir).log.read_all()), before)
 
 
 if __name__ == "__main__":

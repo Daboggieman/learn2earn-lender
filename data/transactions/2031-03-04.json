@@ -5,14 +5,14 @@
     {
       "event_id": "E-20310304-0001",
       "event_type": "loan.checked_out",
-      "occurred_at": "2031-03-04T20:15:00",
+      "occurred_at": "2031-03-04T20:14:42",
       "actor": "system",
       "payload": {
         "transaction_id": "T000573",
         "resource_id": "R018",
         "borrower_id": "F038",
         "quantity": 2,
-        "due_at": "2031-03-11T20:15:00",
+        "due_at": "2031-03-11T20:14:42",
         "condition_on_issue": "good",
         "issued_by": "admin",
         "notes": "mock checkout"

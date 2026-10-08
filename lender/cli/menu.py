@@ -143,7 +143,7 @@ ENTRIES: tuple[Entry, ...] = (
         "Create a Piscine trial group",
         ("add-trial",),
         "Borrowers",
-        (Field("Trial group name", hint="e.g. trial-period-1"),),
+        (Field("Trial group name", hint="e.g. january-2026-trial"),),
     ),
     Entry(
         "list-groups",

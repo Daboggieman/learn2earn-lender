@@ -23,7 +23,7 @@ examples:
   lender mark-condition R001 faulty 1 --reason "screen flicker"
   lender add-cohort cluster-5-mar
   lender add-fellow "Ada Lovelace" --cohort cluster-5-mar
-  lender add-piscine "Alan Turing" --trial trial-period-1
+  lender add-piscine "Alan Turing" --trial january-2026-trial
   lender checkout R001 F001 2 --days 7
   lender return T000001 --condition damaged
   lender history --borrower F001 --open

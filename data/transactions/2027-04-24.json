@@ -5,7 +5,7 @@
     {
       "event_id": "E-20270424-0001",
       "event_type": "loan.returned",
-      "occurred_at": "2027-04-24T10:04:07",
+      "occurred_at": "2027-04-24T10:03:49",
       "actor": "system",
       "payload": {
         "transaction_id": "T000159",
@@ -22,14 +22,14 @@
     {
       "event_id": "E-20270424-0002",
       "event_type": "loan.checked_out",
-      "occurred_at": "2027-04-24T19:44:46",
+      "occurred_at": "2027-04-24T19:44:28",
       "actor": "system",
       "payload": {
         "transaction_id": "T000160",
         "resource_id": "R006",
         "borrower_id": "F332",
         "quantity": 3,
-        "due_at": "2027-05-08T19:44:46",
+        "due_at": "2027-05-08T19:44:28",
         "condition_on_issue": "good",
         "issued_by": "admin",
         "notes": "mock checkout"
@@ -39,14 +39,14 @@
     {
       "event_id": "E-20270424-0003",
       "event_type": "loan.checked_out",
-      "occurred_at": "2027-04-24T20:41:52",
+      "occurred_at": "2027-04-24T20:41:34",
       "actor": "system",
       "payload": {
         "transaction_id": "T000161",
         "resource_id": "R040",
         "borrower_id": "P118",
         "quantity": 2,
-        "due_at": "2027-05-08T20:41:52",
+        "due_at": "2027-05-08T20:41:34",
         "condition_on_issue": "good",
         "issued_by": "admin",
         "notes": "mock checkout"

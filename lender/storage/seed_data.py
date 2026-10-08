@@ -425,13 +425,13 @@ def _mock_people(
     for index in range(fellows):
         person_id = next_sequential_id("F", fellow_ids)
         fellow_ids.append(person_id)
-        cohort = cohort_names[index % len(cohort_names)] if cohort_names else "cluster-1-feb"
+        cohort = cohort_names[index % len(cohort_names)] if cohort_names else SEED_COHORTS[0]
         people.append((person_id, names[index], PersonType.FELLOW.value, cohort))
 
     for offset in range(piscine):
         person_id = next_sequential_id("P", piscine_ids)
         piscine_ids.append(person_id)
-        trial = trial_names[offset % len(trial_names)] if trial_names else "trial-period-1"
+        trial = trial_names[offset % len(trial_names)] if trial_names else SEED_TRIALS[0]
         people.append((person_id, names[fellows + offset], PersonType.PISCINE.value, trial))
     return people
 

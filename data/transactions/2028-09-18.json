@@ -5,7 +5,7 @@
     {
       "event_id": "E-20280918-0001",
       "event_type": "loan.returned",
-      "occurred_at": "2028-09-18T03:37:53",
+      "occurred_at": "2028-09-18T03:37:35",
       "actor": "system",
       "payload": {
         "transaction_id": "T000297",
@@ -22,14 +22,14 @@
     {
       "event_id": "E-20280918-0002",
       "event_type": "loan.checked_out",
-      "occurred_at": "2028-09-18T11:19:09",
+      "occurred_at": "2028-09-18T11:18:51",
       "actor": "system",
       "payload": {
         "transaction_id": "T000298",
         "resource_id": "R063",
         "borrower_id": "F182",
         "quantity": 2,
-        "due_at": "2028-10-02T11:19:09",
+        "due_at": "2028-10-02T11:18:51",
         "condition_on_issue": "good",
         "issued_by": "admin",
         "notes": "mock checkout"

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from .. import output
 from ..context import Context
-from ...domain.errors import ConflictError
+from ...domain.errors import ConflictError, ValidationError
 from ...services.import_export_service import (
     DATASETS,
     FORMATS,
@@ -15,9 +15,12 @@ from ...services.import_export_service import (
 )
 from ...storage import json_repository
 from ...storage.seed_data import (
+    SEED_COHORTS,
     SEED_START,
+    SEED_TRIALS,
     baseline_events,
     entity_ids,
+    group_index,
     mock_events,
     renumber_events,
 )
@@ -34,8 +37,18 @@ def register(subparsers: argparse._SubParsersAction) -> None:
     seed.add_argument(
         "--mock-equipment", type=int, default=0, help="Mock equipment resources to generate"
     )
-    seed.add_argument("--mock-cohorts", type=int, default=4, help="Mock cohorts to generate")
-    seed.add_argument("--mock-trials", type=int, default=6, help="Mock trial periods")
+    seed.add_argument(
+        "--mock-cohorts",
+        type=int,
+        default=len(SEED_COHORTS),
+        help=f"Mock cohorts to fill (at most {len(SEED_COHORTS)})",
+    )
+    seed.add_argument(
+        "--mock-trials",
+        type=int,
+        default=len(SEED_TRIALS),
+        help=f"Mock trial periods to fill (at most {len(SEED_TRIALS)})",
+    )
     seed.add_argument(
         "--mock-loans", type=int, default=0, help="Mock checkout/return transactions"
     )
@@ -119,6 +132,17 @@ def cmd_seed(args: argparse.Namespace, ctx: Context) -> int:
         )
 
     removed = _wipe(ctx) if args.force else 0
+    if removed:
+        ctx.store.refresh()
+
+    if args.mock_cohorts > len(SEED_COHORTS):
+        raise ValidationError(
+            f"only {len(SEED_COHORTS)} cohorts exist: {', '.join(SEED_COHORTS)}"
+        )
+    if args.mock_trials > len(SEED_TRIALS):
+        raise ValidationError(
+            f"only {len(SEED_TRIALS)} trial periods exist: {', '.join(SEED_TRIALS)}"
+        )
 
     events = baseline_events()
     mock_counts = {
@@ -138,6 +162,8 @@ def cmd_seed(args: argparse.Namespace, ctx: Context) -> int:
             seed=args.random_seed,
             start=SEED_START + timedelta(days=1),
             emit_taxonomy=False,
+            emit_groups=False,
+            groups=group_index(events),
             reserved_ids=entity_ids(events),
         )
 

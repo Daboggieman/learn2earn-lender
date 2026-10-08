@@ -41,7 +41,7 @@ def register(subparsers: argparse._SubParsersAction) -> None:
     cohort.set_defaults(handler=cmd_add_cohort)
 
     trial = subparsers.add_parser("add-trial", help="Create a Piscine trial group")
-    trial.add_argument("name", help="Trial group name, e.g. trial-period-1")
+    trial.add_argument("name", help="Trial group name, e.g. january-2026-trial")
     trial.set_defaults(handler=cmd_add_trial)
 
     groups = subparsers.add_parser("list-groups", help="List cohorts and trial groups")

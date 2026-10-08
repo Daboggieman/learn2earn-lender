@@ -5,14 +5,14 @@
     {
       "event_id": "E-20291209-0001",
       "event_type": "loan.checked_out",
-      "occurred_at": "2029-12-09T04:03:30",
+      "occurred_at": "2029-12-09T04:03:12",
       "actor": "system",
       "payload": {
         "transaction_id": "T000435",
         "resource_id": "R043",
         "borrower_id": "F163",
         "quantity": 1,
-        "due_at": "2029-12-23T04:03:30",
+        "due_at": "2029-12-23T04:03:12",
         "condition_on_issue": "good",
         "issued_by": "admin",
         "notes": "mock checkout"
@@ -22,14 +22,14 @@
     {
       "event_id": "E-20291209-0002",
       "event_type": "loan.checked_out",
-      "occurred_at": "2029-12-09T22:40:24",
+      "occurred_at": "2029-12-09T22:40:06",
       "actor": "system",
       "payload": {
         "transaction_id": "T000436",
         "resource_id": "R021",
         "borrower_id": "F306",
         "quantity": 1,
-        "due_at": "2029-12-23T22:40:24",
+        "due_at": "2029-12-23T22:40:06",
         "condition_on_issue": "good",
         "issued_by": "admin",
         "notes": "mock checkout"
