@@ -97,6 +97,13 @@ def _resolve_format(explicit: str | None, path: str | Path) -> str:
     )
 
 
+def _resolve_dataset(explicit: str | None, path: str | Path, fmt: str) -> str | None:
+    if explicit or fmt != "csv":
+        return explicit
+    stem = Path(path).stem.lower()
+    return stem if stem in DATASETS else None
+
+
 def _wipe(ctx: Context) -> int:
     removed = 0
     for directory in (ctx.store.paths.transactions_dir, ctx.store.paths.current_dir):
@@ -168,7 +175,8 @@ def cmd_seed(args: argparse.Namespace, ctx: Context) -> int:
 
 def cmd_export(args: argparse.Namespace, ctx: Context) -> int:
     fmt = _resolve_format(args.fmt, args.out)
-    summary = ctx.transfer.write_export(args.out, fmt=fmt, dataset=args.dataset)
+    dataset = _resolve_dataset(args.dataset, args.out, fmt)
+    summary = ctx.transfer.write_export(args.out, fmt=fmt, dataset=dataset)
 
     if ctx.as_json:
         output.print_json(summary)
@@ -188,8 +196,9 @@ def cmd_export(args: argparse.Namespace, ctx: Context) -> int:
 
 def cmd_import(args: argparse.Namespace, ctx: Context) -> int:
     fmt = _resolve_format(args.fmt, args.path)
+    dataset = _resolve_dataset(args.dataset, args.path, fmt)
     summary = ctx.transfer.import_file(
-        args.path, fmt=fmt, dataset=args.dataset, mode=args.mode
+        args.path, fmt=fmt, dataset=dataset, mode=args.mode
     )
 
     if ctx.as_json:
@@ -199,7 +208,7 @@ def cmd_import(args: argparse.Namespace, ctx: Context) -> int:
     if summary["mode"] == "replace":
         output.info(
             f"Replaced the store with {summary['imported']} event(s) "
-            f"from {summary['source']}."
+            f"from {args.path}."
         )
     else:
         skipped = (
@@ -207,9 +216,6 @@ def cmd_import(args: argparse.Namespace, ctx: Context) -> int:
             if summary["skipped"]
             else ""
         )
-        output.info(
-            f"Imported {summary['imported']} event(s) from {summary['source']}"
-            f"{skipped}."
-        )
+        output.info(f"Imported {summary['imported']} event(s) from {args.path}{skipped}.")
     output.info(f"The store now holds {summary['total_events']} event(s).")
     return 0

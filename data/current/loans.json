@@ -1,0 +1,23 @@
+{
+  "loans": [
+    {
+      "transaction_id": "T000001",
+      "resource_id": "R001",
+      "borrower_id": "F001",
+      "transaction_type": "checkout",
+      "quantity": 2,
+      "outstanding_quantity": 2,
+      "returned_quantity": 0,
+      "issued_at": "2026-10-08T12:20:22",
+      "due_at": "2026-10-22T12:20:22",
+      "returned_at": null,
+      "condition_on_issue": "good",
+      "condition_on_return": null,
+      "issued_by": "admin",
+      "returned_by": null,
+      "notes": "",
+      "return_notes": "",
+      "status": "active"
+    }
+  ]
+}

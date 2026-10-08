@@ -42,8 +42,8 @@ PENDING_PREFIX = "PENDING-"
 DATASETS: tuple[str, ...] = ("taxonomy", "groups", "resources", "people", "loans")
 
 CSV_COLUMNS: dict[str, tuple[str, ...]] = {
-    "taxonomy": ("id", "name", "type", "parent_id", "status"),
-    "groups": ("id", "name", "type", "status"),
+    "taxonomy": ("id", "name", "type", "parent_id", "status", "created_at"),
+    "groups": ("id", "name", "type", "status", "created_at"),
     "resources": (
         "id",
         "name",
@@ -58,8 +58,9 @@ CSV_COLUMNS: dict[str, tuple[str, ...]] = {
         "needed_quantity",
         "status",
         "notes",
+        "created_at",
     ),
-    "people": ("id", "name", "type", "group_id", "status", "notes"),
+    "people": ("id", "name", "type", "group_id", "status", "notes", "created_at"),
     "loans": (
         "transaction_id",
         "resource_id",
@@ -76,6 +77,8 @@ CSV_COLUMNS: dict[str, tuple[str, ...]] = {
         "notes",
     ),
 }
+
+OPTIONAL_COLUMNS = frozenset({"created_at"})
 
 IMPORT_MODES: tuple[str, ...] = ("merge", "replace")
 
@@ -240,6 +243,7 @@ class ImportExportService:
                     "group_id": person.group_id,
                     "status": person.status.value,
                     "notes": person.notes,
+                    "created_at": person.created_at,
                 }
                 for person in sorted(state.people.values(), key=lambda p: p.id)
             ]
@@ -250,6 +254,7 @@ class ImportExportService:
                     "name": group.name,
                     "type": group.type.value,
                     "status": group.status.value,
+                    "created_at": group.created_at,
                 }
                 for group in sorted(state.groups.values(), key=lambda g: g.id)
             ]
@@ -261,6 +266,7 @@ class ImportExportService:
                     "type": node.type.value,
                     "parent_id": node.parent_id or "",
                     "status": node.status.value,
+                    "created_at": node.created_at,
                 }
                 for node in sorted(state.taxonomy.values(), key=lambda n: n.id)
             ]
@@ -381,6 +387,7 @@ class ImportExportService:
         return events
 
     def _taxonomy_events(self, row: dict[str, Any], pending: str) -> list[Event]:
+        moment = self._moment(row)
         node = TaxonomyNode.from_dict(
             {
                 "id": cell(row, "id"),
@@ -388,24 +395,44 @@ class ImportExportService:
                 "type": cell(row, "type"),
                 "parent_id": cell(row, "parent_id") or None,
                 "status": cell(row, "status") or "active",
+                "created_at": moment,
             }
         )
-        return [self._event(EventType.TAXONOMY_CREATED, {"node": node.to_dict()}, pending)]
+        return [
+            self._event(
+                EventType.TAXONOMY_CREATED,
+                {"node": node.to_dict()},
+                pending,
+                occurred_at=moment,
+            )
+        ]
 
     def _group_events(self, row: dict[str, Any], pending: str) -> list[Event]:
+        moment = self._moment(row)
         group = Group.from_dict(
             {
                 "id": cell(row, "id"),
                 "name": cell(row, "name"),
                 "type": cell(row, "type"),
                 "status": cell(row, "status") or "active",
+                "created_at": moment,
             }
         )
-        return [self._event(EventType.GROUP_CREATED, {"group": group.to_dict()}, pending)]
+        return [
+            self._event(
+                EventType.GROUP_CREATED,
+                {"group": group.to_dict()},
+                pending,
+                occurred_at=moment,
+            )
+        ]
 
     def _resource_events(self, row: dict[str, Any], pending: str) -> list[Event]:
+        moment = self._moment(row)
         total = require_non_negative(cell(row, "total_quantity"), "total_quantity")
-        issued = require_non_negative(cell(row, "issued_quantity") or 0, "issued_quantity")
+        issued = require_non_negative(
+            cell(row, "issued_quantity") or 0, "issued_quantity"
+        )
         counts = {
             condition.value: require_non_negative(
                 cell(row, condition.value) or 0, condition.value
@@ -433,15 +460,20 @@ class ImportExportService:
                 ),
                 "status": cell(row, "status") or ResourceStatus.ACTIVE.value,
                 "notes": cell(row, "notes"),
+                "created_at": moment,
             }
         )
         return [
             self._event(
-                EventType.RESOURCE_CREATED, {"resource": resource.to_dict()}, pending
+                EventType.RESOURCE_CREATED,
+                {"resource": resource.to_dict()},
+                pending,
+                occurred_at=moment,
             )
         ]
 
     def _people_events(self, row: dict[str, Any], pending: str) -> list[Event]:
+        moment = self._moment(row)
         person = Person.from_dict(
             {
                 "id": cell(row, "id"),
@@ -450,9 +482,17 @@ class ImportExportService:
                 "group_id": cell(row, "group_id"),
                 "status": cell(row, "status") or "active",
                 "notes": cell(row, "notes"),
+                "created_at": moment,
             }
         )
-        return [self._event(EventType.PERSON_CREATED, {"person": person.to_dict()}, pending)]
+        return [
+            self._event(
+                EventType.PERSON_CREATED,
+                {"person": person.to_dict()},
+                pending,
+                occurred_at=moment,
+            )
+        ]
 
     def _loans_events(self, row: dict[str, Any], pending: str) -> list[Event]:
         transaction_id = validate_id(cell(row, "transaction_id"), "transaction_id")
@@ -527,6 +567,13 @@ class ImportExportService:
             payload=payload,
         )
 
+    @staticmethod
+    def _moment(row: dict[str, Any]) -> str:
+        stamp = cell(row, "created_at")
+        if not stamp:
+            return now_iso()
+        return to_iso(parse_datetime(stamp, "created_at"))
+
 
 def resource_row(resource: Resource) -> dict[str, Any]:
     counts = resource.condition_counts
@@ -544,6 +591,7 @@ def resource_row(resource: Resource) -> dict[str, Any]:
         "needed_quantity": resource.needed_quantity,
         "status": resource.status.value,
         "notes": resource.notes,
+        "created_at": resource.created_at,
     }
 
 
@@ -600,7 +648,7 @@ def require_mode(mode: str) -> str:
 def require_columns(dataset: str, fieldnames: Iterable[str] | None) -> None:
     if not fieldnames:
         raise ValidationError(f"{dataset} CSV is empty and has no header row")
-    missing = set(CSV_COLUMNS[dataset]) - set(fieldnames)
+    missing = set(CSV_COLUMNS[dataset]) - OPTIONAL_COLUMNS - set(fieldnames)
     if missing:
         raise ValidationError(
             f"{dataset} CSV is missing column(s): {', '.join(sorted(missing))}"

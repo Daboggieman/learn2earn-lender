@@ -1,0 +1,124 @@
+{
+  "date": "2026-10-08",
+  "count": 6,
+  "events": [
+    {
+      "event_id": "E-20261008-0001",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-10-08T12:16:51",
+      "actor": "admin",
+      "payload": {
+        "node": {
+          "id": "electronics",
+          "name": "Electronics",
+          "type": "category",
+          "parent_id": null,
+          "status": "active",
+          "created_at": "2026-10-08T12:16:51",
+          "updated_at": "2026-10-08T12:16:51"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0002",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-10-08T12:17:28",
+      "actor": "admin",
+      "payload": {
+        "node": {
+          "id": "electronics-laptop",
+          "name": "Laptop",
+          "type": "subcategory",
+          "parent_id": "electronics",
+          "status": "active",
+          "created_at": "2026-10-08T12:17:28",
+          "updated_at": "2026-10-08T12:17:28"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0003",
+      "event_type": "resource.created",
+      "occurred_at": "2026-10-08T12:17:33",
+      "actor": "admin",
+      "payload": {
+        "resource": {
+          "id": "R001",
+          "name": "Dell Latitude",
+          "category_id": "electronics",
+          "subcategory_id": "electronics-laptop",
+          "total_quantity": 10,
+          "available_quantity": 10,
+          "issued_quantity": 0,
+          "condition_counts": {
+            "faulty": 0,
+            "damaged": 0,
+            "missing": 0,
+            "retired": 0
+          },
+          "needed_quantity": 0,
+          "status": "active",
+          "created_at": "2026-10-08T12:17:33",
+          "updated_at": "2026-10-08T12:17:33",
+          "notes": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0004",
+      "event_type": "group.created",
+      "occurred_at": "2026-10-08T12:20:04",
+      "actor": "admin",
+      "payload": {
+        "group": {
+          "id": "G001",
+          "name": "july-cohort",
+          "type": "cohort",
+          "status": "active",
+          "created_at": "2026-10-08T12:20:04",
+          "updated_at": "2026-10-08T12:20:04"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0005",
+      "event_type": "person.created",
+      "occurred_at": "2026-10-08T12:20:08",
+      "actor": "admin",
+      "payload": {
+        "person": {
+          "id": "F001",
+          "name": "Adakole Ogah",
+          "type": "fellow",
+          "group_id": "G001",
+          "status": "active",
+          "created_at": "2026-10-08T12:20:08",
+          "updated_at": "2026-10-08T12:20:08",
+          "notes": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0006",
+      "event_type": "loan.checked_out",
+      "occurred_at": "2026-10-08T12:20:22",
+      "actor": "admin",
+      "payload": {
+        "transaction_id": "T000001",
+        "resource_id": "R001",
+        "borrower_id": "F001",
+        "quantity": 2,
+        "due_at": "2026-10-22T12:20:22",
+        "condition_on_issue": "good",
+        "issued_by": "admin",
+        "notes": ""
+      },
+      "notes": ""
+    }
+  ]
+}

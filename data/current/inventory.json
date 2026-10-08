@@ -1,0 +1,24 @@
+{
+  "resources": [
+    {
+      "id": "R001",
+      "name": "Dell Latitude",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-laptop",
+      "total_quantity": 10,
+      "available_quantity": 8,
+      "issued_quantity": 2,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 0,
+      "status": "active",
+      "created_at": "2026-10-08T12:17:33",
+      "updated_at": "2026-10-08T12:20:22",
+      "notes": ""
+    }
+  ]
+}

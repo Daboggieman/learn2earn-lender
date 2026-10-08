@@ -1,0 +1,22 @@
+{
+  "nodes": [
+    {
+      "id": "electronics",
+      "name": "Electronics",
+      "type": "category",
+      "parent_id": null,
+      "status": "active",
+      "created_at": "2026-10-08T12:16:51",
+      "updated_at": "2026-10-08T12:16:51"
+    },
+    {
+      "id": "electronics-laptop",
+      "name": "Laptop",
+      "type": "subcategory",
+      "parent_id": "electronics",
+      "status": "active",
+      "created_at": "2026-10-08T12:17:28",
+      "updated_at": "2026-10-08T12:17:28"
+    }
+  ]
+}

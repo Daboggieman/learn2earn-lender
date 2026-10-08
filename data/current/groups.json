@@ -1,0 +1,12 @@
+{
+  "groups": [
+    {
+      "id": "G001",
+      "name": "july-cohort",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-10-08T12:20:04",
+      "updated_at": "2026-10-08T12:20:04"
+    }
+  ]
+}

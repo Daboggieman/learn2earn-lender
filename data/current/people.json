@@ -1,0 +1,14 @@
+{
+  "people": [
+    {
+      "id": "F001",
+      "name": "Adakole Ogah",
+      "type": "fellow",
+      "group_id": "G001",
+      "status": "active",
+      "created_at": "2026-10-08T12:20:08",
+      "updated_at": "2026-10-08T12:20:08",
+      "notes": ""
+    }
+  ]
+}
