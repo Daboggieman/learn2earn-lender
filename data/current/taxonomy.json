@@ -1,6 +1,24 @@
 {
   "nodes": [
     {
+      "id": "accessories",
+      "name": "Accessories",
+      "type": "category",
+      "parent_id": null,
+      "status": "active",
+      "created_at": "2026-10-08T12:28:00",
+      "updated_at": "2026-10-08T12:28:00"
+    },
+    {
+      "id": "accessories-keyboard",
+      "name": "keyboard",
+      "type": "subcategory",
+      "parent_id": "accessories",
+      "status": "active",
+      "created_at": "2026-10-08T12:28:59",
+      "updated_at": "2026-10-08T12:28:59"
+    },
+    {
       "id": "electronics",
       "name": "Electronics",
       "type": "category",

@@ -1,6 +1,6 @@
 {
   "date": "2026-10-08",
-  "count": 6,
+  "count": 11,
   "events": [
     {
       "event_id": "E-20261008-0001",
@@ -114,6 +114,107 @@
         "borrower_id": "F001",
         "quantity": 2,
         "due_at": "2026-10-22T12:20:22",
+        "condition_on_issue": "good",
+        "issued_by": "admin",
+        "notes": ""
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0007",
+      "event_type": "person.created",
+      "occurred_at": "2026-10-08T12:27:16",
+      "actor": "admin",
+      "payload": {
+        "person": {
+          "id": "F002",
+          "name": "Ahmed Tinubu",
+          "type": "fellow",
+          "group_id": "G001",
+          "status": "active",
+          "created_at": "2026-10-08T12:27:16",
+          "updated_at": "2026-10-08T12:27:16",
+          "notes": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0008",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-10-08T12:28:00",
+      "actor": "admin",
+      "payload": {
+        "node": {
+          "id": "accessories",
+          "name": "Accessories",
+          "type": "category",
+          "parent_id": null,
+          "status": "active",
+          "created_at": "2026-10-08T12:28:00",
+          "updated_at": "2026-10-08T12:28:00"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0009",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-10-08T12:28:59",
+      "actor": "admin",
+      "payload": {
+        "node": {
+          "id": "accessories-keyboard",
+          "name": "keyboard",
+          "type": "subcategory",
+          "parent_id": "accessories",
+          "status": "active",
+          "created_at": "2026-10-08T12:28:59",
+          "updated_at": "2026-10-08T12:28:59"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0010",
+      "event_type": "resource.created",
+      "occurred_at": "2026-10-08T12:30:43",
+      "actor": "admin",
+      "payload": {
+        "resource": {
+          "id": "R002",
+          "name": "HP mechanical keyboard",
+          "category_id": "accessories",
+          "subcategory_id": "accessories-keyboard",
+          "total_quantity": 5,
+          "available_quantity": 5,
+          "issued_quantity": 0,
+          "condition_counts": {
+            "faulty": 0,
+            "damaged": 0,
+            "missing": 0,
+            "retired": 0
+          },
+          "needed_quantity": 0,
+          "status": "active",
+          "created_at": "2026-10-08T12:30:43",
+          "updated_at": "2026-10-08T12:30:43",
+          "notes": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0011",
+      "event_type": "loan.checked_out",
+      "occurred_at": "2026-10-08T12:31:06",
+      "actor": "admin",
+      "payload": {
+        "transaction_id": "T000002",
+        "resource_id": "R002",
+        "borrower_id": "F002",
+        "quantity": 3,
+        "due_at": "2026-10-22T12:31:06",
         "condition_on_issue": "good",
         "issued_by": "admin",
         "notes": ""

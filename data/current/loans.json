@@ -18,6 +18,25 @@
       "notes": "",
       "return_notes": "",
       "status": "active"
+    },
+    {
+      "transaction_id": "T000002",
+      "resource_id": "R002",
+      "borrower_id": "F002",
+      "transaction_type": "checkout",
+      "quantity": 3,
+      "outstanding_quantity": 3,
+      "returned_quantity": 0,
+      "issued_at": "2026-10-08T12:31:06",
+      "due_at": "2026-10-22T12:31:06",
+      "returned_at": null,
+      "condition_on_issue": "good",
+      "condition_on_return": null,
+      "issued_by": "admin",
+      "returned_by": null,
+      "notes": "",
+      "return_notes": "",
+      "status": "active"
     }
   ]
 }

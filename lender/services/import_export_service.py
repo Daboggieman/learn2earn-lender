@@ -430,9 +430,6 @@ class ImportExportService:
     def _resource_events(self, row: dict[str, Any], pending: str) -> list[Event]:
         moment = self._moment(row)
         total = require_non_negative(cell(row, "total_quantity"), "total_quantity")
-        issued = require_non_negative(
-            cell(row, "issued_quantity") or 0, "issued_quantity"
-        )
         counts = {
             condition.value: require_non_negative(
                 cell(row, condition.value) or 0, condition.value
@@ -440,10 +437,9 @@ class ImportExportService:
             for condition in UNAVAILABLE_CONDITIONS
         }
         unavailable = sum(counts.values())
-        if issued + unavailable > total:
+        if unavailable > total:
             raise ValidationError(
-                f"{issued} issued and {unavailable} unavailable unit(s) exceed "
-                f"the total of {total}"
+                f"{unavailable} unavailable unit(s) exceed the total of {total}"
             )
         resource = Resource.from_dict(
             {
@@ -452,9 +448,9 @@ class ImportExportService:
                 "category_id": cell(row, "category_id"),
                 "subcategory_id": cell(row, "subcategory_id"),
                 "total_quantity": total,
-                "available_quantity": total - issued - unavailable,
-                "issued_quantity": issued,
-                "condition_counts": {k: v for k, v in counts.items() if v},
+                "available_quantity": total - unavailable,
+                "issued_quantity": 0,
+                "condition_counts": {},
                 "needed_quantity": require_non_negative(
                     cell(row, "needed_quantity") or 0, "needed_quantity"
                 ),
@@ -463,7 +459,7 @@ class ImportExportService:
                 "created_at": moment,
             }
         )
-        return [
+        events = [
             self._event(
                 EventType.RESOURCE_CREATED,
                 {"resource": resource.to_dict()},
@@ -471,6 +467,23 @@ class ImportExportService:
                 occurred_at=moment,
             )
         ]
+        for condition, quantity in counts.items():
+            if not quantity:
+                continue
+            events.append(
+                self._event(
+                    EventType.RESOURCE_CONDITION_CHANGED,
+                    {
+                        "resource_id": resource.id,
+                        "from": Condition.GOOD.value,
+                        "to": condition,
+                        "quantity": quantity,
+                    },
+                    f"{pending}-{condition}",
+                    occurred_at=moment,
+                )
+            )
+        return events
 
     def _people_events(self, row: dict[str, Any], pending: str) -> list[Event]:
         moment = self._moment(row)
