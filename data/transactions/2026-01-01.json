@@ -1,0 +1,553 @@
+{
+  "date": "2026-01-01",
+  "count": 29,
+  "events": [
+    {
+      "event_id": "E-20260101-0001",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:01",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "electronics",
+          "name": "Electronics",
+          "type": "category",
+          "parent_id": null,
+          "status": "active",
+          "created_at": "2026-01-01T08:00:01",
+          "updated_at": "2026-01-01T08:00:01"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0002",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:02",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "electronics-desktop-computer",
+          "name": "desktop-computer",
+          "type": "subcategory",
+          "parent_id": "electronics",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:02",
+          "updated_at": "2026-01-01T08:00:02"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0003",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:03",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "electronics-laptop",
+          "name": "laptop",
+          "type": "subcategory",
+          "parent_id": "electronics",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:03",
+          "updated_at": "2026-01-01T08:00:03"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0004",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:04",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "accessories",
+          "name": "Accessories",
+          "type": "category",
+          "parent_id": null,
+          "status": "active",
+          "created_at": "2026-01-01T08:00:04",
+          "updated_at": "2026-01-01T08:00:04"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0005",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:05",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "accessories-keyboard",
+          "name": "keyboard",
+          "type": "subcategory",
+          "parent_id": "accessories",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:05",
+          "updated_at": "2026-01-01T08:00:05"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0006",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:06",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "accessories-mouse",
+          "name": "mouse",
+          "type": "subcategory",
+          "parent_id": "accessories",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:06",
+          "updated_at": "2026-01-01T08:00:06"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0007",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:07",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "accessories-mouse-pad",
+          "name": "mouse-pad",
+          "type": "subcategory",
+          "parent_id": "accessories",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:07",
+          "updated_at": "2026-01-01T08:00:07"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0008",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:08",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "accessories-others",
+          "name": "others",
+          "type": "subcategory",
+          "parent_id": "accessories",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:08",
+          "updated_at": "2026-01-01T08:00:08"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0009",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:09",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "utilities",
+          "name": "Utilities",
+          "type": "category",
+          "parent_id": null,
+          "status": "active",
+          "created_at": "2026-01-01T08:00:09",
+          "updated_at": "2026-01-01T08:00:09"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0010",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:10",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "utilities-chairs",
+          "name": "chairs",
+          "type": "subcategory",
+          "parent_id": "utilities",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:10",
+          "updated_at": "2026-01-01T08:00:10"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0011",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:11",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "utilities-internet-access",
+          "name": "internet-access",
+          "type": "subcategory",
+          "parent_id": "utilities",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:11",
+          "updated_at": "2026-01-01T08:00:11"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0012",
+      "event_type": "taxonomy.created",
+      "occurred_at": "2026-01-01T08:00:12",
+      "actor": "system",
+      "payload": {
+        "node": {
+          "id": "utilities-facility-access",
+          "name": "facility-access",
+          "type": "subcategory",
+          "parent_id": "utilities",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:12",
+          "updated_at": "2026-01-01T08:00:12"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0013",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:13",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G001",
+          "name": "cluster-1-feb",
+          "type": "cohort",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:13",
+          "updated_at": "2026-01-01T08:00:13"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0014",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:14",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G002",
+          "name": "cluster-2-feb",
+          "type": "cohort",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:14",
+          "updated_at": "2026-01-01T08:00:14"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0015",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:15",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G003",
+          "name": "cluster-3-feb",
+          "type": "cohort",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:15",
+          "updated_at": "2026-01-01T08:00:15"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0016",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:16",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G004",
+          "name": "cluster-4-feb",
+          "type": "cohort",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:16",
+          "updated_at": "2026-01-01T08:00:16"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0017",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:17",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G005",
+          "name": "july-cohort",
+          "type": "cohort",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:17",
+          "updated_at": "2026-01-01T08:00:17"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0018",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:18",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G006",
+          "name": "trial-period-1",
+          "type": "trial",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:18",
+          "updated_at": "2026-01-01T08:00:18"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0019",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:19",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G007",
+          "name": "trial-period-2",
+          "type": "trial",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:19",
+          "updated_at": "2026-01-01T08:00:19"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0020",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:20",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G008",
+          "name": "trial-period-3",
+          "type": "trial",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:20",
+          "updated_at": "2026-01-01T08:00:20"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0021",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:21",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G009",
+          "name": "trial-period-4",
+          "type": "trial",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:21",
+          "updated_at": "2026-01-01T08:00:21"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0022",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:22",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G010",
+          "name": "trial-period-5",
+          "type": "trial",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:22",
+          "updated_at": "2026-01-01T08:00:22"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0023",
+      "event_type": "group.created",
+      "occurred_at": "2026-01-01T08:00:23",
+      "actor": "system",
+      "payload": {
+        "group": {
+          "id": "G011",
+          "name": "trial-period-6",
+          "type": "trial",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:23",
+          "updated_at": "2026-01-01T08:00:23"
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0024",
+      "event_type": "resource.created",
+      "occurred_at": "2026-01-01T08:00:24",
+      "actor": "system",
+      "payload": {
+        "resource": {
+          "id": "R001",
+          "name": "Laptop",
+          "category_id": "electronics",
+          "subcategory_id": "electronics-laptop",
+          "total_quantity": 10,
+          "available_quantity": 10,
+          "issued_quantity": 0,
+          "condition_counts": {
+            "faulty": 0,
+            "damaged": 0,
+            "missing": 0,
+            "retired": 0
+          },
+          "needed_quantity": 0,
+          "status": "active",
+          "created_at": "2026-01-01T08:00:24",
+          "updated_at": "2026-01-01T08:00:24",
+          "notes": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0025",
+      "event_type": "resource.created",
+      "occurred_at": "2026-01-01T08:00:25",
+      "actor": "system",
+      "payload": {
+        "resource": {
+          "id": "R002",
+          "name": "Keyboard",
+          "category_id": "accessories",
+          "subcategory_id": "accessories-keyboard",
+          "total_quantity": 5,
+          "available_quantity": 5,
+          "issued_quantity": 0,
+          "condition_counts": {
+            "faulty": 0,
+            "damaged": 0,
+            "missing": 0,
+            "retired": 0
+          },
+          "needed_quantity": 0,
+          "status": "active",
+          "created_at": "2026-01-01T08:00:25",
+          "updated_at": "2026-01-01T08:00:25",
+          "notes": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0026",
+      "event_type": "resource.created",
+      "occurred_at": "2026-01-01T08:00:26",
+      "actor": "system",
+      "payload": {
+        "resource": {
+          "id": "R003",
+          "name": "Headset",
+          "category_id": "accessories",
+          "subcategory_id": "accessories-others",
+          "total_quantity": 3,
+          "available_quantity": 3,
+          "issued_quantity": 0,
+          "condition_counts": {
+            "faulty": 0,
+            "damaged": 0,
+            "missing": 0,
+            "retired": 0
+          },
+          "needed_quantity": 0,
+          "status": "active",
+          "created_at": "2026-01-01T08:00:26",
+          "updated_at": "2026-01-01T08:00:26",
+          "notes": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0027",
+      "event_type": "person.created",
+      "occurred_at": "2026-01-01T08:00:27",
+      "actor": "system",
+      "payload": {
+        "person": {
+          "id": "F001",
+          "name": "Ada",
+          "type": "fellow",
+          "group_id": "G001",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:27",
+          "updated_at": "2026-01-01T08:00:27",
+          "notes": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0028",
+      "event_type": "person.created",
+      "occurred_at": "2026-01-01T08:00:28",
+      "actor": "system",
+      "payload": {
+        "person": {
+          "id": "F002",
+          "name": "John",
+          "type": "fellow",
+          "group_id": "G002",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:28",
+          "updated_at": "2026-01-01T08:00:28",
+          "notes": ""
+        }
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20260101-0029",
+      "event_type": "person.created",
+      "occurred_at": "2026-01-01T08:00:29",
+      "actor": "system",
+      "payload": {
+        "person": {
+          "id": "F003",
+          "name": "Grace",
+          "type": "fellow",
+          "group_id": "G003",
+          "status": "active",
+          "created_at": "2026-01-01T08:00:29",
+          "updated_at": "2026-01-01T08:00:29",
+          "notes": ""
+        }
+      },
+      "notes": ""
+    }
+  ]
+}

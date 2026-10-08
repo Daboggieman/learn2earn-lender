@@ -1,0 +1,40 @@
+{
+  "date": "2030-09-13",
+  "count": 2,
+  "events": [
+    {
+      "event_id": "E-20300913-0001",
+      "event_type": "loan.returned",
+      "occurred_at": "2030-09-13T16:49:04",
+      "actor": "system",
+      "payload": {
+        "transaction_id": "T000519",
+        "checkout_transaction_id": "T000518",
+        "resource_id": "R045",
+        "borrower_id": "F029",
+        "quantity": 1,
+        "condition_on_return": "damaged",
+        "returned_by": "admin",
+        "notes": "mock return"
+      },
+      "notes": "mock"
+    },
+    {
+      "event_id": "E-20300913-0002",
+      "event_type": "loan.checked_out",
+      "occurred_at": "2030-09-13T20:26:47",
+      "actor": "system",
+      "payload": {
+        "transaction_id": "T000520",
+        "resource_id": "R048",
+        "borrower_id": "F396",
+        "quantity": 3,
+        "due_at": "2030-09-27T20:26:47",
+        "condition_on_issue": "good",
+        "issued_by": "admin",
+        "notes": "mock checkout"
+      },
+      "notes": "mock"
+    }
+  ]
+}

@@ -1,225 +1,40 @@
 {
   "date": "2026-10-08",
-  "count": 11,
+  "count": 2,
   "events": [
     {
       "event_id": "E-20261008-0001",
-      "event_type": "taxonomy.created",
-      "occurred_at": "2026-10-08T12:16:51",
-      "actor": "admin",
+      "event_type": "loan.returned",
+      "occurred_at": "2026-10-08T08:53:05",
+      "actor": "system",
       "payload": {
-        "node": {
-          "id": "electronics",
-          "name": "Electronics",
-          "type": "category",
-          "parent_id": null,
-          "status": "active",
-          "created_at": "2026-10-08T12:16:51",
-          "updated_at": "2026-10-08T12:16:51"
-        }
+        "transaction_id": "T000104",
+        "checkout_transaction_id": "T000103",
+        "resource_id": "R017",
+        "borrower_id": "F322",
+        "quantity": 2,
+        "condition_on_return": "good",
+        "returned_by": "admin",
+        "notes": "mock return"
       },
-      "notes": ""
+      "notes": "mock"
     },
     {
       "event_id": "E-20261008-0002",
-      "event_type": "taxonomy.created",
-      "occurred_at": "2026-10-08T12:17:28",
-      "actor": "admin",
-      "payload": {
-        "node": {
-          "id": "electronics-laptop",
-          "name": "Laptop",
-          "type": "subcategory",
-          "parent_id": "electronics",
-          "status": "active",
-          "created_at": "2026-10-08T12:17:28",
-          "updated_at": "2026-10-08T12:17:28"
-        }
-      },
-      "notes": ""
-    },
-    {
-      "event_id": "E-20261008-0003",
-      "event_type": "resource.created",
-      "occurred_at": "2026-10-08T12:17:33",
-      "actor": "admin",
-      "payload": {
-        "resource": {
-          "id": "R001",
-          "name": "Dell Latitude",
-          "category_id": "electronics",
-          "subcategory_id": "electronics-laptop",
-          "total_quantity": 10,
-          "available_quantity": 10,
-          "issued_quantity": 0,
-          "condition_counts": {
-            "faulty": 0,
-            "damaged": 0,
-            "missing": 0,
-            "retired": 0
-          },
-          "needed_quantity": 0,
-          "status": "active",
-          "created_at": "2026-10-08T12:17:33",
-          "updated_at": "2026-10-08T12:17:33",
-          "notes": ""
-        }
-      },
-      "notes": ""
-    },
-    {
-      "event_id": "E-20261008-0004",
-      "event_type": "group.created",
-      "occurred_at": "2026-10-08T12:20:04",
-      "actor": "admin",
-      "payload": {
-        "group": {
-          "id": "G001",
-          "name": "july-cohort",
-          "type": "cohort",
-          "status": "active",
-          "created_at": "2026-10-08T12:20:04",
-          "updated_at": "2026-10-08T12:20:04"
-        }
-      },
-      "notes": ""
-    },
-    {
-      "event_id": "E-20261008-0005",
-      "event_type": "person.created",
-      "occurred_at": "2026-10-08T12:20:08",
-      "actor": "admin",
-      "payload": {
-        "person": {
-          "id": "F001",
-          "name": "Adakole Ogah",
-          "type": "fellow",
-          "group_id": "G001",
-          "status": "active",
-          "created_at": "2026-10-08T12:20:08",
-          "updated_at": "2026-10-08T12:20:08",
-          "notes": ""
-        }
-      },
-      "notes": ""
-    },
-    {
-      "event_id": "E-20261008-0006",
       "event_type": "loan.checked_out",
-      "occurred_at": "2026-10-08T12:20:22",
-      "actor": "admin",
+      "occurred_at": "2026-10-08T14:32:55",
+      "actor": "system",
       "payload": {
-        "transaction_id": "T000001",
-        "resource_id": "R001",
-        "borrower_id": "F001",
+        "transaction_id": "T000105",
+        "resource_id": "R010",
+        "borrower_id": "P102",
         "quantity": 2,
-        "due_at": "2026-10-22T12:20:22",
+        "due_at": "2026-10-15T14:32:55",
         "condition_on_issue": "good",
         "issued_by": "admin",
-        "notes": ""
+        "notes": "mock checkout"
       },
-      "notes": ""
-    },
-    {
-      "event_id": "E-20261008-0007",
-      "event_type": "person.created",
-      "occurred_at": "2026-10-08T12:27:16",
-      "actor": "admin",
-      "payload": {
-        "person": {
-          "id": "F002",
-          "name": "Ahmed Tinubu",
-          "type": "fellow",
-          "group_id": "G001",
-          "status": "active",
-          "created_at": "2026-10-08T12:27:16",
-          "updated_at": "2026-10-08T12:27:16",
-          "notes": ""
-        }
-      },
-      "notes": ""
-    },
-    {
-      "event_id": "E-20261008-0008",
-      "event_type": "taxonomy.created",
-      "occurred_at": "2026-10-08T12:28:00",
-      "actor": "admin",
-      "payload": {
-        "node": {
-          "id": "accessories",
-          "name": "Accessories",
-          "type": "category",
-          "parent_id": null,
-          "status": "active",
-          "created_at": "2026-10-08T12:28:00",
-          "updated_at": "2026-10-08T12:28:00"
-        }
-      },
-      "notes": ""
-    },
-    {
-      "event_id": "E-20261008-0009",
-      "event_type": "taxonomy.created",
-      "occurred_at": "2026-10-08T12:28:59",
-      "actor": "admin",
-      "payload": {
-        "node": {
-          "id": "accessories-keyboard",
-          "name": "keyboard",
-          "type": "subcategory",
-          "parent_id": "accessories",
-          "status": "active",
-          "created_at": "2026-10-08T12:28:59",
-          "updated_at": "2026-10-08T12:28:59"
-        }
-      },
-      "notes": ""
-    },
-    {
-      "event_id": "E-20261008-0010",
-      "event_type": "resource.created",
-      "occurred_at": "2026-10-08T12:30:43",
-      "actor": "admin",
-      "payload": {
-        "resource": {
-          "id": "R002",
-          "name": "HP mechanical keyboard",
-          "category_id": "accessories",
-          "subcategory_id": "accessories-keyboard",
-          "total_quantity": 5,
-          "available_quantity": 5,
-          "issued_quantity": 0,
-          "condition_counts": {
-            "faulty": 0,
-            "damaged": 0,
-            "missing": 0,
-            "retired": 0
-          },
-          "needed_quantity": 0,
-          "status": "active",
-          "created_at": "2026-10-08T12:30:43",
-          "updated_at": "2026-10-08T12:30:43",
-          "notes": ""
-        }
-      },
-      "notes": ""
-    },
-    {
-      "event_id": "E-20261008-0011",
-      "event_type": "loan.checked_out",
-      "occurred_at": "2026-10-08T12:31:06",
-      "actor": "admin",
-      "payload": {
-        "transaction_id": "T000002",
-        "resource_id": "R002",
-        "borrower_id": "F002",
-        "quantity": 3,
-        "due_at": "2026-10-22T12:31:06",
-        "condition_on_issue": "good",
-        "issued_by": "admin",
-        "notes": ""
-      },
-      "notes": ""
+      "notes": "mock"
     }
   ]
 }

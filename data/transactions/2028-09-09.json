@@ -1,0 +1,57 @@
+{
+  "date": "2028-09-09",
+  "count": 3,
+  "events": [
+    {
+      "event_id": "E-20280909-0001",
+      "event_type": "loan.returned",
+      "occurred_at": "2028-09-09T02:07:44",
+      "actor": "system",
+      "payload": {
+        "transaction_id": "T000294",
+        "checkout_transaction_id": "T000293",
+        "resource_id": "R052",
+        "borrower_id": "F296",
+        "quantity": 2,
+        "condition_on_return": "good",
+        "returned_by": "admin",
+        "notes": "mock return"
+      },
+      "notes": "mock"
+    },
+    {
+      "event_id": "E-20280909-0002",
+      "event_type": "loan.checked_out",
+      "occurred_at": "2028-09-09T06:57:41",
+      "actor": "system",
+      "payload": {
+        "transaction_id": "T000295",
+        "resource_id": "R004",
+        "borrower_id": "P028",
+        "quantity": 3,
+        "due_at": "2028-09-16T06:57:41",
+        "condition_on_issue": "good",
+        "issued_by": "admin",
+        "notes": "mock checkout"
+      },
+      "notes": "mock"
+    },
+    {
+      "event_id": "E-20280909-0003",
+      "event_type": "loan.checked_out",
+      "occurred_at": "2028-09-09T17:56:04",
+      "actor": "system",
+      "payload": {
+        "transaction_id": "T000296",
+        "resource_id": "R015",
+        "borrower_id": "P014",
+        "quantity": 1,
+        "due_at": "2028-09-23T17:56:04",
+        "condition_on_issue": "good",
+        "issued_by": "admin",
+        "notes": "mock checkout"
+      },
+      "notes": "mock"
+    }
+  ]
+}

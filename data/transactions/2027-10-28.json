@@ -1,0 +1,23 @@
+{
+  "date": "2027-10-28",
+  "count": 1,
+  "events": [
+    {
+      "event_id": "E-20271028-0001",
+      "event_type": "loan.checked_out",
+      "occurred_at": "2027-10-28T11:37:49",
+      "actor": "system",
+      "payload": {
+        "transaction_id": "T000213",
+        "resource_id": "R041",
+        "borrower_id": "F353",
+        "quantity": 3,
+        "due_at": "2027-11-11T11:37:49",
+        "condition_on_issue": "good",
+        "issued_by": "admin",
+        "notes": "mock checkout"
+      },
+      "notes": "mock"
+    }
+  ]
+}

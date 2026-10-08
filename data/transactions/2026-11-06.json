@@ -1,0 +1,23 @@
+{
+  "date": "2026-11-06",
+  "count": 1,
+  "events": [
+    {
+      "event_id": "E-20261106-0001",
+      "event_type": "loan.checked_out",
+      "occurred_at": "2026-11-06T01:01:17",
+      "actor": "system",
+      "payload": {
+        "transaction_id": "T000111",
+        "resource_id": "R028",
+        "borrower_id": "F401",
+        "quantity": 1,
+        "due_at": "2026-11-20T01:01:17",
+        "condition_on_issue": "good",
+        "issued_by": "admin",
+        "notes": "mock checkout"
+      },
+      "notes": "mock"
+    }
+  ]
+}

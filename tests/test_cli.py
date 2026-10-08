@@ -60,6 +60,7 @@ class ParserTests(CliTestCase):
                 main(["--help"])
         self.assertEqual(caught.exception.code, 0)
         for command in (
+            "menu",
             "add-resource",
             "mark-condition",
             "report-low-stock",

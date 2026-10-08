@@ -1,0 +1,23 @@
+{
+  "date": "2026-09-24",
+  "count": 1,
+  "events": [
+    {
+      "event_id": "E-20260924-0001",
+      "event_type": "loan.returned",
+      "occurred_at": "2026-09-24T09:21:56",
+      "actor": "system",
+      "payload": {
+        "transaction_id": "T000102",
+        "checkout_transaction_id": "T000101",
+        "resource_id": "R005",
+        "borrower_id": "F362",
+        "quantity": 1,
+        "condition_on_return": "good",
+        "returned_by": "admin",
+        "notes": "mock return"
+      },
+      "notes": "mock"
+    }
+  ]
+}

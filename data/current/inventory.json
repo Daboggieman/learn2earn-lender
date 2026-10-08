@@ -2,12 +2,12 @@
   "resources": [
     {
       "id": "R001",
-      "name": "Dell Latitude",
+      "name": "Laptop",
       "category_id": "electronics",
       "subcategory_id": "electronics-laptop",
       "total_quantity": 10,
-      "available_quantity": 8,
-      "issued_quantity": 2,
+      "available_quantity": 10,
+      "issued_quantity": 0,
       "condition_counts": {
         "faulty": 0,
         "damaged": 0,
@@ -16,17 +16,337 @@
       },
       "needed_quantity": 0,
       "status": "active",
-      "created_at": "2026-10-08T12:17:33",
-      "updated_at": "2026-10-08T12:20:22",
+      "created_at": "2026-01-01T08:00:24",
+      "updated_at": "2026-01-01T08:00:24",
       "notes": ""
     },
     {
       "id": "R002",
-      "name": "HP mechanical keyboard",
+      "name": "Keyboard",
       "category_id": "accessories",
       "subcategory_id": "accessories-keyboard",
       "total_quantity": 5,
-      "available_quantity": 2,
+      "available_quantity": 5,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 0,
+      "status": "active",
+      "created_at": "2026-01-01T08:00:25",
+      "updated_at": "2026-01-01T08:00:25",
+      "notes": ""
+    },
+    {
+      "id": "R003",
+      "name": "Headset",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-others",
+      "total_quantity": 3,
+      "available_quantity": 3,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 0,
+      "status": "active",
+      "created_at": "2026-01-01T08:00:26",
+      "updated_at": "2026-01-01T08:00:26",
+      "notes": ""
+    },
+    {
+      "id": "R004",
+      "name": "Desktop Computer 1",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-desktop-computer",
+      "total_quantity": 10,
+      "available_quantity": 0,
+      "issued_quantity": 8,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 4,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:19",
+      "updated_at": "2030-07-30T05:50:28",
+      "notes": ""
+    },
+    {
+      "id": "R005",
+      "name": "Laptop 2",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-laptop",
+      "total_quantity": 23,
+      "available_quantity": 17,
+      "issued_quantity": 4,
+      "condition_counts": {
+        "faulty": 2,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 6,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:20",
+      "updated_at": "2031-04-05T14:29:01",
+      "notes": ""
+    },
+    {
+      "id": "R006",
+      "name": "Keyboard 3",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-keyboard",
+      "total_quantity": 32,
+      "available_quantity": 16,
+      "issued_quantity": 14,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:21",
+      "updated_at": "2031-12-07T03:20:34",
+      "notes": ""
+    },
+    {
+      "id": "R007",
+      "name": "Mouse 4",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse",
+      "total_quantity": 28,
+      "available_quantity": 20,
+      "issued_quantity": 7,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 1,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:22",
+      "updated_at": "2031-02-21T03:18:22",
+      "notes": ""
+    },
+    {
+      "id": "R008",
+      "name": "Mouse Pad 5",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse-pad",
+      "total_quantity": 19,
+      "available_quantity": 14,
+      "issued_quantity": 2,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 3,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 10,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:23",
+      "updated_at": "2031-10-24T13:03:24",
+      "notes": ""
+    },
+    {
+      "id": "R009",
+      "name": "Others 6",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-others",
+      "total_quantity": 13,
+      "available_quantity": 9,
+      "issued_quantity": 4,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 5,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:24",
+      "updated_at": "2028-11-28T11:51:36",
+      "notes": ""
+    },
+    {
+      "id": "R010",
+      "name": "Chairs 7",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-chairs",
+      "total_quantity": 44,
+      "available_quantity": 40,
+      "issued_quantity": 2,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 12,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:25",
+      "updated_at": "2031-11-20T04:26:50",
+      "notes": ""
+    },
+    {
+      "id": "R011",
+      "name": "Internet Access 8",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-internet-access",
+      "total_quantity": 8,
+      "available_quantity": 8,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:26",
+      "updated_at": "2029-03-30T17:28:52",
+      "notes": ""
+    },
+    {
+      "id": "R012",
+      "name": "Facility Access 9",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-facility-access",
+      "total_quantity": 8,
+      "available_quantity": 8,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:27",
+      "updated_at": "2030-03-18T21:08:49",
+      "notes": ""
+    },
+    {
+      "id": "R013",
+      "name": "Desktop Computer 10",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-desktop-computer",
+      "total_quantity": 18,
+      "available_quantity": 16,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 2,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 4,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:28",
+      "updated_at": "2032-01-13T18:42:59",
+      "notes": ""
+    },
+    {
+      "id": "R014",
+      "name": "Laptop 11",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-laptop",
+      "total_quantity": 24,
+      "available_quantity": 19,
+      "issued_quantity": 5,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 6,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:29",
+      "updated_at": "2031-10-05T00:07:16",
+      "notes": ""
+    },
+    {
+      "id": "R015",
+      "name": "Keyboard 12",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-keyboard",
+      "total_quantity": 28,
+      "available_quantity": 27,
+      "issued_quantity": 1,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:30",
+      "updated_at": "2030-08-06T18:08:27",
+      "notes": ""
+    },
+    {
+      "id": "R016",
+      "name": "Mouse 13",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse",
+      "total_quantity": 32,
+      "available_quantity": 27,
+      "issued_quantity": 3,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:31",
+      "updated_at": "2031-09-10T08:05:32",
+      "notes": ""
+    },
+    {
+      "id": "R017",
+      "name": "Mouse Pad 14",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse-pad",
+      "total_quantity": 22,
+      "available_quantity": 8,
+      "issued_quantity": 13,
+      "condition_counts": {
+        "faulty": 1,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 10,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:32",
+      "updated_at": "2031-07-15T11:05:33",
+      "notes": ""
+    },
+    {
+      "id": "R018",
+      "name": "Others 15",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-others",
+      "total_quantity": 21,
+      "available_quantity": 18,
       "issued_quantity": 3,
       "condition_counts": {
         "faulty": 0,
@@ -34,10 +354,910 @@
         "missing": 0,
         "retired": 0
       },
-      "needed_quantity": 0,
+      "needed_quantity": 5,
       "status": "active",
-      "created_at": "2026-10-08T12:30:43",
-      "updated_at": "2026-10-08T12:31:06",
+      "created_at": "2026-01-02T08:00:33",
+      "updated_at": "2031-03-17T18:56:40",
+      "notes": ""
+    },
+    {
+      "id": "R019",
+      "name": "Chairs 16",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-chairs",
+      "total_quantity": 40,
+      "available_quantity": 35,
+      "issued_quantity": 5,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 12,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:34",
+      "updated_at": "2028-04-29T05:29:18",
+      "notes": ""
+    },
+    {
+      "id": "R020",
+      "name": "Internet Access 17",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-internet-access",
+      "total_quantity": 12,
+      "available_quantity": 10,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:35",
+      "updated_at": "2031-12-29T00:36:21",
+      "notes": ""
+    },
+    {
+      "id": "R021",
+      "name": "Facility Access 18",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-facility-access",
+      "total_quantity": 11,
+      "available_quantity": 7,
+      "issued_quantity": 4,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:36",
+      "updated_at": "2030-03-07T01:19:39",
+      "notes": ""
+    },
+    {
+      "id": "R022",
+      "name": "Desktop Computer 19",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-desktop-computer",
+      "total_quantity": 15,
+      "available_quantity": 7,
+      "issued_quantity": 5,
+      "condition_counts": {
+        "faulty": 3,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 4,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:37",
+      "updated_at": "2031-01-24T05:53:08",
+      "notes": ""
+    },
+    {
+      "id": "R023",
+      "name": "Laptop 20",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-laptop",
+      "total_quantity": 26,
+      "available_quantity": 13,
+      "issued_quantity": 13,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 6,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:38",
+      "updated_at": "2031-11-18T06:05:41",
+      "notes": ""
+    },
+    {
+      "id": "R024",
+      "name": "Keyboard 21",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-keyboard",
+      "total_quantity": 32,
+      "available_quantity": 30,
+      "issued_quantity": 2,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:39",
+      "updated_at": "2029-11-07T11:26:57",
+      "notes": ""
+    },
+    {
+      "id": "R025",
+      "name": "Mouse 22",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse",
+      "total_quantity": 33,
+      "available_quantity": 20,
+      "issued_quantity": 11,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:40",
+      "updated_at": "2031-10-04T20:03:20",
+      "notes": ""
+    },
+    {
+      "id": "R026",
+      "name": "Mouse Pad 23",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse-pad",
+      "total_quantity": 26,
+      "available_quantity": 21,
+      "issued_quantity": 2,
+      "condition_counts": {
+        "faulty": 3,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 10,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:41",
+      "updated_at": "2030-11-23T00:09:26",
+      "notes": ""
+    },
+    {
+      "id": "R027",
+      "name": "Others 24",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-others",
+      "total_quantity": 18,
+      "available_quantity": 18,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 5,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:42",
+      "updated_at": "2031-09-23T01:33:19",
+      "notes": ""
+    },
+    {
+      "id": "R028",
+      "name": "Chairs 25",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-chairs",
+      "total_quantity": 38,
+      "available_quantity": 35,
+      "issued_quantity": 2,
+      "condition_counts": {
+        "faulty": 1,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 12,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:43",
+      "updated_at": "2031-10-23T18:21:20",
+      "notes": ""
+    },
+    {
+      "id": "R029",
+      "name": "Internet Access 26",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-internet-access",
+      "total_quantity": 10,
+      "available_quantity": 0,
+      "issued_quantity": 6,
+      "condition_counts": {
+        "faulty": 2,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:44",
+      "updated_at": "2030-06-14T11:38:45",
+      "notes": ""
+    },
+    {
+      "id": "R030",
+      "name": "Facility Access 27",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-facility-access",
+      "total_quantity": 6,
+      "available_quantity": 0,
+      "issued_quantity": 5,
+      "condition_counts": {
+        "faulty": 1,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:45",
+      "updated_at": "2031-05-06T21:15:09",
+      "notes": ""
+    },
+    {
+      "id": "R031",
+      "name": "Desktop Computer 28",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-desktop-computer",
+      "total_quantity": 13,
+      "available_quantity": 2,
+      "issued_quantity": 11,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 4,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:46",
+      "updated_at": "2031-08-11T15:36:49",
+      "notes": ""
+    },
+    {
+      "id": "R032",
+      "name": "Laptop 29",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-laptop",
+      "total_quantity": 25,
+      "available_quantity": 13,
+      "issued_quantity": 9,
+      "condition_counts": {
+        "faulty": 3,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 6,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:47",
+      "updated_at": "2031-08-22T08:27:46",
+      "notes": ""
+    },
+    {
+      "id": "R033",
+      "name": "Keyboard 30",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-keyboard",
+      "total_quantity": 33,
+      "available_quantity": 28,
+      "issued_quantity": 5,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:48",
+      "updated_at": "2028-04-01T17:04:05",
+      "notes": ""
+    },
+    {
+      "id": "R034",
+      "name": "Mouse 31",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse",
+      "total_quantity": 33,
+      "available_quantity": 32,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 1,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:49",
+      "updated_at": "2027-04-21T11:27:43",
+      "notes": ""
+    },
+    {
+      "id": "R035",
+      "name": "Mouse Pad 32",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse-pad",
+      "total_quantity": 26,
+      "available_quantity": 22,
+      "issued_quantity": 2,
+      "condition_counts": {
+        "faulty": 2,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 10,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:50",
+      "updated_at": "2031-12-05T14:29:45",
+      "notes": ""
+    },
+    {
+      "id": "R036",
+      "name": "Others 33",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-others",
+      "total_quantity": 18,
+      "available_quantity": 12,
+      "issued_quantity": 5,
+      "condition_counts": {
+        "faulty": 1,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 5,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:51",
+      "updated_at": "2031-05-22T17:34:44",
+      "notes": ""
+    },
+    {
+      "id": "R037",
+      "name": "Chairs 34",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-chairs",
+      "total_quantity": 43,
+      "available_quantity": 38,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 5,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 12,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:52",
+      "updated_at": "2032-01-16T05:51:28",
+      "notes": ""
+    },
+    {
+      "id": "R038",
+      "name": "Internet Access 35",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-internet-access",
+      "total_quantity": 14,
+      "available_quantity": 1,
+      "issued_quantity": 8,
+      "condition_counts": {
+        "faulty": 3,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:53",
+      "updated_at": "2031-10-15T09:58:58",
+      "notes": ""
+    },
+    {
+      "id": "R039",
+      "name": "Facility Access 36",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-facility-access",
+      "total_quantity": 6,
+      "available_quantity": 0,
+      "issued_quantity": 4,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:54",
+      "updated_at": "2031-12-30T09:58:44",
+      "notes": ""
+    },
+    {
+      "id": "R040",
+      "name": "Desktop Computer 37",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-desktop-computer",
+      "total_quantity": 17,
+      "available_quantity": 15,
+      "issued_quantity": 2,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 4,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:55",
+      "updated_at": "2030-06-29T01:57:22",
+      "notes": ""
+    },
+    {
+      "id": "R041",
+      "name": "Laptop 38",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-laptop",
+      "total_quantity": 23,
+      "available_quantity": 19,
+      "issued_quantity": 4,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 6,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:56",
+      "updated_at": "2030-10-14T19:49:56",
+      "notes": ""
+    },
+    {
+      "id": "R042",
+      "name": "Keyboard 39",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-keyboard",
+      "total_quantity": 34,
+      "available_quantity": 24,
+      "issued_quantity": 8,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:57",
+      "updated_at": "2030-09-29T21:56:20",
+      "notes": ""
+    },
+    {
+      "id": "R043",
+      "name": "Mouse 40",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse",
+      "total_quantity": 34,
+      "available_quantity": 25,
+      "issued_quantity": 7,
+      "condition_counts": {
+        "faulty": 2,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:58",
+      "updated_at": "2031-08-28T08:22:56",
+      "notes": ""
+    },
+    {
+      "id": "R044",
+      "name": "Mouse Pad 41",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse-pad",
+      "total_quantity": 18,
+      "available_quantity": 16,
+      "issued_quantity": 2,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 10,
+      "status": "active",
+      "created_at": "2026-01-02T08:00:59",
+      "updated_at": "2030-08-05T23:34:53",
+      "notes": ""
+    },
+    {
+      "id": "R045",
+      "name": "Others 42",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-others",
+      "total_quantity": 13,
+      "available_quantity": 7,
+      "issued_quantity": 5,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 1,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 5,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:00",
+      "updated_at": "2030-09-13T16:49:04",
+      "notes": ""
+    },
+    {
+      "id": "R046",
+      "name": "Chairs 43",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-chairs",
+      "total_quantity": 44,
+      "available_quantity": 35,
+      "issued_quantity": 6,
+      "condition_counts": {
+        "faulty": 2,
+        "damaged": 1,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 12,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:01",
+      "updated_at": "2031-06-23T11:17:39",
+      "notes": ""
+    },
+    {
+      "id": "R047",
+      "name": "Internet Access 44",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-internet-access",
+      "total_quantity": 13,
+      "available_quantity": 10,
+      "issued_quantity": 3,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:02",
+      "updated_at": "2029-01-09T10:01:54",
+      "notes": ""
+    },
+    {
+      "id": "R048",
+      "name": "Facility Access 45",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-facility-access",
+      "total_quantity": 13,
+      "available_quantity": 10,
+      "issued_quantity": 3,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:03",
+      "updated_at": "2030-09-13T20:26:47",
+      "notes": ""
+    },
+    {
+      "id": "R049",
+      "name": "Desktop Computer 46",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-desktop-computer",
+      "total_quantity": 12,
+      "available_quantity": 4,
+      "issued_quantity": 5,
+      "condition_counts": {
+        "faulty": 3,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 4,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:04",
+      "updated_at": "2031-11-03T01:23:23",
+      "notes": ""
+    },
+    {
+      "id": "R050",
+      "name": "Laptop 47",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-laptop",
+      "total_quantity": 23,
+      "available_quantity": 23,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 6,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:05",
+      "updated_at": "2030-05-17T01:47:32",
+      "notes": ""
+    },
+    {
+      "id": "R051",
+      "name": "Keyboard 48",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-keyboard",
+      "total_quantity": 33,
+      "available_quantity": 28,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 5,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:06",
+      "updated_at": "2031-07-01T10:21:41",
+      "notes": ""
+    },
+    {
+      "id": "R052",
+      "name": "Mouse 49",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse",
+      "total_quantity": 30,
+      "available_quantity": 29,
+      "issued_quantity": 0,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 1,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:07",
+      "updated_at": "2031-11-17T23:39:25",
+      "notes": ""
+    },
+    {
+      "id": "R053",
+      "name": "Mouse Pad 50",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse-pad",
+      "total_quantity": 18,
+      "available_quantity": 14,
+      "issued_quantity": 4,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 10,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:08",
+      "updated_at": "2031-06-23T12:21:14",
+      "notes": ""
+    },
+    {
+      "id": "R054",
+      "name": "Others 51",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-others",
+      "total_quantity": 16,
+      "available_quantity": 13,
+      "issued_quantity": 3,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 5,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:09",
+      "updated_at": "2031-09-09T07:17:18",
+      "notes": ""
+    },
+    {
+      "id": "R055",
+      "name": "Chairs 52",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-chairs",
+      "total_quantity": 40,
+      "available_quantity": 36,
+      "issued_quantity": 2,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 2,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 12,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:10",
+      "updated_at": "2031-06-12T16:52:04",
+      "notes": ""
+    },
+    {
+      "id": "R056",
+      "name": "Internet Access 53",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-internet-access",
+      "total_quantity": 13,
+      "available_quantity": 10,
+      "issued_quantity": 3,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:11",
+      "updated_at": "2031-03-25T14:31:48",
+      "notes": ""
+    },
+    {
+      "id": "R057",
+      "name": "Facility Access 54",
+      "category_id": "utilities",
+      "subcategory_id": "utilities-facility-access",
+      "total_quantity": 7,
+      "available_quantity": 0,
+      "issued_quantity": 7,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 2,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:12",
+      "updated_at": "2029-01-26T05:19:21",
+      "notes": ""
+    },
+    {
+      "id": "R058",
+      "name": "Desktop Computer 55",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-desktop-computer",
+      "total_quantity": 13,
+      "available_quantity": 2,
+      "issued_quantity": 4,
+      "condition_counts": {
+        "faulty": 3,
+        "damaged": 4,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 4,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:13",
+      "updated_at": "2031-09-23T22:10:57",
+      "notes": ""
+    },
+    {
+      "id": "R059",
+      "name": "Laptop 56",
+      "category_id": "electronics",
+      "subcategory_id": "electronics-laptop",
+      "total_quantity": 27,
+      "available_quantity": 23,
+      "issued_quantity": 3,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 1,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 6,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:14",
+      "updated_at": "2030-05-11T18:38:01",
+      "notes": ""
+    },
+    {
+      "id": "R060",
+      "name": "Keyboard 57",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-keyboard",
+      "total_quantity": 34,
+      "available_quantity": 26,
+      "issued_quantity": 5,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 3,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:15",
+      "updated_at": "2032-01-23T09:55:00",
+      "notes": ""
+    },
+    {
+      "id": "R061",
+      "name": "Mouse 58",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse",
+      "total_quantity": 30,
+      "available_quantity": 17,
+      "issued_quantity": 11,
+      "condition_counts": {
+        "faulty": 2,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 8,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:16",
+      "updated_at": "2032-01-16T11:19:21",
+      "notes": ""
+    },
+    {
+      "id": "R062",
+      "name": "Mouse Pad 59",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-mouse-pad",
+      "total_quantity": 26,
+      "available_quantity": 18,
+      "issued_quantity": 8,
+      "condition_counts": {
+        "faulty": 0,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 10,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:17",
+      "updated_at": "2031-09-29T04:58:16",
+      "notes": ""
+    },
+    {
+      "id": "R063",
+      "name": "Others 60",
+      "category_id": "accessories",
+      "subcategory_id": "accessories-others",
+      "total_quantity": 14,
+      "available_quantity": 0,
+      "issued_quantity": 10,
+      "condition_counts": {
+        "faulty": 4,
+        "damaged": 0,
+        "missing": 0,
+        "retired": 0
+      },
+      "needed_quantity": 5,
+      "status": "active",
+      "created_at": "2026-01-02T08:01:18",
+      "updated_at": "2031-02-16T04:10:48",
       "notes": ""
     }
   ]

@@ -1,0 +1,23 @@
+{
+  "date": "2028-08-11",
+  "count": 1,
+  "events": [
+    {
+      "event_id": "E-20280811-0001",
+      "event_type": "loan.returned",
+      "occurred_at": "2028-08-11T17:34:31",
+      "actor": "system",
+      "payload": {
+        "transaction_id": "T000289",
+        "checkout_transaction_id": "T000288",
+        "resource_id": "R061",
+        "borrower_id": "F291",
+        "quantity": 2,
+        "condition_on_return": "good",
+        "returned_by": "admin",
+        "notes": "mock return"
+      },
+      "notes": "mock"
+    }
+  ]
+}

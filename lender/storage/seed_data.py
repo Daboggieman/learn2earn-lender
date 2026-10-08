@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import random
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from dataclasses import replace
 from datetime import datetime, timedelta
+from types import MappingProxyType
 
 from ..domain.equipment import Condition, ResourceStatus, empty_condition_counts
 from ..domain.events import SYSTEM_ACTOR, Event, EventType, format_event_id
@@ -31,7 +32,18 @@ SEED_COHORTS: tuple[str, ...] = (
     "july-cohort",
 )
 
-SEED_TRIALS: tuple[str, ...] = tuple(f"trial-period-{index}" for index in range(1, 7))
+SEED_TRIALS: tuple[str, ...] = (
+    "january-2026-trial",
+    "february-2026-trial",
+    "march-2026-trial",
+    "april-2026-trial",
+    "may-2026-trial",
+    "june-2026-trial",
+    "july-2026-trial",
+    "august-2026-trial",
+    "september-2026-trial",
+    "october-2026-trial",
+)
 
 SEED_RESOURCES: tuple[dict[str, object], ...] = (
     {
@@ -125,6 +137,14 @@ def entity_ids(events: Iterable[Event]) -> set[str]:
         elif event.event_type is EventType.TAXONOMY_CREATED:
             identifiers.add(str(payload["node"]["id"]))
     return identifiers
+
+
+def group_index(events: Iterable[Event]) -> dict[str, str]:
+    return {
+        str(event.payload["group"]["name"]): str(event.payload["group"]["id"])
+        for event in events
+        if event.event_type is EventType.GROUP_CREATED
+    }
 
 
 def _reserved_with_prefix(reserved: Iterable[str], prefix: str) -> list[str]:
@@ -254,12 +274,13 @@ def _emit_resources(
         )
 
 
-def _emit_people(builder: _EventBuilder, people: list[tuple[str, str, str, str]]) -> None:
-    group_ids_by_name = {
-        str(event.payload["group"]["name"]): str(event.payload["group"]["id"])
-        for event in builder.events
-        if event.event_type is EventType.GROUP_CREATED
-    }
+def _emit_people(
+    builder: _EventBuilder,
+    people: list[tuple[str, str, str, str]],
+    known_groups: Mapping[str, str] = MappingProxyType({}),
+) -> None:
+    group_ids_by_name = dict(known_groups)
+    group_ids_by_name.update(group_index(builder.events))
     for person_id, name, person_type, group_name in people:
         moment = builder.tick()
         builder.add(
@@ -318,31 +339,45 @@ def mock_events(
     fellows: int = 0,
     piscine: int = 0,
     equipment: int = 0,
-    cohorts: int = 4,
-    trials: int = 6,
+    cohorts: int = len(SEED_COHORTS),
+    trials: int = len(SEED_TRIALS),
     loans: int = 0,
     seed: int = 20260101,
     start: datetime | None = None,
     emit_taxonomy: bool = True,
+    emit_groups: bool = True,
+    groups: Mapping[str, str] = MappingProxyType({}),
     reserved_ids: Iterable[str] = (),
 ) -> list[Event]:
     if min(fellows, piscine, equipment, cohorts, trials, loans) < 0:
         raise ValueError("mock counts must not be negative")
+    if cohorts > len(SEED_COHORTS):
+        raise ValueError(
+            f"at most {len(SEED_COHORTS)} cohorts are defined: "
+            f"{', '.join(SEED_COHORTS)}"
+        )
+    if trials > len(SEED_TRIALS):
+        raise ValueError(
+            f"at most {len(SEED_TRIALS)} trial periods are defined: "
+            f"{', '.join(SEED_TRIALS)}"
+        )
 
     rng = random.Random(seed)
     builder = _EventBuilder(start or SEED_START)
     reserved = set(reserved_ids)
 
-    cohort_names = [f"cluster-{index + 1}-mock" for index in range(cohorts)]
-    trial_names = [f"mock-trial-{index + 1}" for index in range(trials)]
+    cohort_names = list(SEED_COHORTS)[:cohorts]
+    trial_names = list(SEED_TRIALS)[:trials]
 
     if emit_taxonomy:
         _emit_taxonomy(builder)
-    _emit_groups(builder, cohort_names, trial_names, reserved)
+    if emit_groups:
+        _emit_groups(builder, cohort_names, trial_names, reserved)
     _emit_resources(builder, _mock_resources(rng, equipment, reserved))
     _emit_people(
         builder,
         _mock_people(rng, fellows, piscine, cohort_names, trial_names, reserved),
+        groups,
     )
     if loans:
         _emit_loans(builder, rng, loans)

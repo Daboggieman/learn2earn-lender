@@ -2,11 +2,235 @@
   "groups": [
     {
       "id": "G001",
+      "name": "cluster-1-feb",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:13",
+      "updated_at": "2026-01-01T08:00:13"
+    },
+    {
+      "id": "G002",
+      "name": "cluster-2-feb",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:14",
+      "updated_at": "2026-01-01T08:00:14"
+    },
+    {
+      "id": "G003",
+      "name": "cluster-3-feb",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:15",
+      "updated_at": "2026-01-01T08:00:15"
+    },
+    {
+      "id": "G004",
+      "name": "cluster-4-feb",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:16",
+      "updated_at": "2026-01-01T08:00:16"
+    },
+    {
+      "id": "G005",
       "name": "july-cohort",
       "type": "cohort",
       "status": "active",
-      "created_at": "2026-10-08T12:20:04",
-      "updated_at": "2026-10-08T12:20:04"
+      "created_at": "2026-01-01T08:00:17",
+      "updated_at": "2026-01-01T08:00:17"
+    },
+    {
+      "id": "G006",
+      "name": "trial-period-1",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:18",
+      "updated_at": "2026-01-01T08:00:18"
+    },
+    {
+      "id": "G007",
+      "name": "trial-period-2",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:19",
+      "updated_at": "2026-01-01T08:00:19"
+    },
+    {
+      "id": "G008",
+      "name": "trial-period-3",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:20",
+      "updated_at": "2026-01-01T08:00:20"
+    },
+    {
+      "id": "G009",
+      "name": "trial-period-4",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:21",
+      "updated_at": "2026-01-01T08:00:21"
+    },
+    {
+      "id": "G010",
+      "name": "trial-period-5",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:22",
+      "updated_at": "2026-01-01T08:00:22"
+    },
+    {
+      "id": "G011",
+      "name": "trial-period-6",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:23",
+      "updated_at": "2026-01-01T08:00:23"
+    },
+    {
+      "id": "G012",
+      "name": "cluster-1-mock",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:01",
+      "updated_at": "2026-01-02T08:00:01"
+    },
+    {
+      "id": "G013",
+      "name": "cluster-2-mock",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:02",
+      "updated_at": "2026-01-02T08:00:02"
+    },
+    {
+      "id": "G014",
+      "name": "cluster-3-mock",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:03",
+      "updated_at": "2026-01-02T08:00:03"
+    },
+    {
+      "id": "G015",
+      "name": "cluster-4-mock",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:04",
+      "updated_at": "2026-01-02T08:00:04"
+    },
+    {
+      "id": "G016",
+      "name": "cluster-5-mock",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:05",
+      "updated_at": "2026-01-02T08:00:05"
+    },
+    {
+      "id": "G017",
+      "name": "cluster-6-mock",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:06",
+      "updated_at": "2026-01-02T08:00:06"
+    },
+    {
+      "id": "G018",
+      "name": "cluster-7-mock",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:07",
+      "updated_at": "2026-01-02T08:00:07"
+    },
+    {
+      "id": "G019",
+      "name": "cluster-8-mock",
+      "type": "cohort",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:08",
+      "updated_at": "2026-01-02T08:00:08"
+    },
+    {
+      "id": "G020",
+      "name": "mock-trial-1",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:09",
+      "updated_at": "2026-01-02T08:00:09"
+    },
+    {
+      "id": "G021",
+      "name": "mock-trial-2",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:10",
+      "updated_at": "2026-01-02T08:00:10"
+    },
+    {
+      "id": "G022",
+      "name": "mock-trial-3",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:11",
+      "updated_at": "2026-01-02T08:00:11"
+    },
+    {
+      "id": "G023",
+      "name": "mock-trial-4",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:12",
+      "updated_at": "2026-01-02T08:00:12"
+    },
+    {
+      "id": "G024",
+      "name": "mock-trial-5",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:13",
+      "updated_at": "2026-01-02T08:00:13"
+    },
+    {
+      "id": "G025",
+      "name": "mock-trial-6",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:14",
+      "updated_at": "2026-01-02T08:00:14"
+    },
+    {
+      "id": "G026",
+      "name": "mock-trial-7",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:15",
+      "updated_at": "2026-01-02T08:00:15"
+    },
+    {
+      "id": "G027",
+      "name": "mock-trial-8",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:16",
+      "updated_at": "2026-01-02T08:00:16"
+    },
+    {
+      "id": "G028",
+      "name": "mock-trial-9",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:17",
+      "updated_at": "2026-01-02T08:00:17"
+    },
+    {
+      "id": "G029",
+      "name": "mock-trial-10",
+      "type": "trial",
+      "status": "active",
+      "created_at": "2026-01-02T08:00:18",
+      "updated_at": "2026-01-02T08:00:18"
     }
   ]
 }

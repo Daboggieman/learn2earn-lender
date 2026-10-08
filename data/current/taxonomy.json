@@ -6,8 +6,8 @@
       "type": "category",
       "parent_id": null,
       "status": "active",
-      "created_at": "2026-10-08T12:28:00",
-      "updated_at": "2026-10-08T12:28:00"
+      "created_at": "2026-01-01T08:00:04",
+      "updated_at": "2026-01-01T08:00:04"
     },
     {
       "id": "accessories-keyboard",
@@ -15,8 +15,35 @@
       "type": "subcategory",
       "parent_id": "accessories",
       "status": "active",
-      "created_at": "2026-10-08T12:28:59",
-      "updated_at": "2026-10-08T12:28:59"
+      "created_at": "2026-01-01T08:00:05",
+      "updated_at": "2026-01-01T08:00:05"
+    },
+    {
+      "id": "accessories-mouse",
+      "name": "mouse",
+      "type": "subcategory",
+      "parent_id": "accessories",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:06",
+      "updated_at": "2026-01-01T08:00:06"
+    },
+    {
+      "id": "accessories-mouse-pad",
+      "name": "mouse-pad",
+      "type": "subcategory",
+      "parent_id": "accessories",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:07",
+      "updated_at": "2026-01-01T08:00:07"
+    },
+    {
+      "id": "accessories-others",
+      "name": "others",
+      "type": "subcategory",
+      "parent_id": "accessories",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:08",
+      "updated_at": "2026-01-01T08:00:08"
     },
     {
       "id": "electronics",
@@ -24,17 +51,62 @@
       "type": "category",
       "parent_id": null,
       "status": "active",
-      "created_at": "2026-10-08T12:16:51",
-      "updated_at": "2026-10-08T12:16:51"
+      "created_at": "2026-01-01T08:00:01",
+      "updated_at": "2026-01-01T08:00:01"
     },
     {
-      "id": "electronics-laptop",
-      "name": "Laptop",
+      "id": "electronics-desktop-computer",
+      "name": "desktop-computer",
       "type": "subcategory",
       "parent_id": "electronics",
       "status": "active",
-      "created_at": "2026-10-08T12:17:28",
-      "updated_at": "2026-10-08T12:17:28"
+      "created_at": "2026-01-01T08:00:02",
+      "updated_at": "2026-01-01T08:00:02"
+    },
+    {
+      "id": "electronics-laptop",
+      "name": "laptop",
+      "type": "subcategory",
+      "parent_id": "electronics",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:03",
+      "updated_at": "2026-01-01T08:00:03"
+    },
+    {
+      "id": "utilities",
+      "name": "Utilities",
+      "type": "category",
+      "parent_id": null,
+      "status": "active",
+      "created_at": "2026-01-01T08:00:09",
+      "updated_at": "2026-01-01T08:00:09"
+    },
+    {
+      "id": "utilities-chairs",
+      "name": "chairs",
+      "type": "subcategory",
+      "parent_id": "utilities",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:10",
+      "updated_at": "2026-01-01T08:00:10"
+    },
+    {
+      "id": "utilities-facility-access",
+      "name": "facility-access",
+      "type": "subcategory",
+      "parent_id": "utilities",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:12",
+      "updated_at": "2026-01-01T08:00:12"
+    },
+    {
+      "id": "utilities-internet-access",
+      "name": "internet-access",
+      "type": "subcategory",
+      "parent_id": "utilities",
+      "status": "active",
+      "created_at": "2026-01-01T08:00:11",
+      "updated_at": "2026-01-01T08:00:11"
     }
   ]
 }

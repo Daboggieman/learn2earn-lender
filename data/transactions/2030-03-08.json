@@ -1,0 +1,23 @@
+{
+  "date": "2030-03-08",
+  "count": 1,
+  "events": [
+    {
+      "event_id": "E-20300308-0001",
+      "event_type": "loan.checked_out",
+      "occurred_at": "2030-03-08T07:49:12",
+      "actor": "system",
+      "payload": {
+        "transaction_id": "T000461",
+        "resource_id": "R012",
+        "borrower_id": "F208",
+        "quantity": 2,
+        "due_at": "2030-03-15T07:49:12",
+        "condition_on_issue": "good",
+        "issued_by": "admin",
+        "notes": "mock checkout"
+      },
+      "notes": "mock"
+    }
+  ]
+}
