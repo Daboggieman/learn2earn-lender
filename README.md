@@ -1,6 +1,7 @@
-#
+#LEARN2EARN-LENDER (equipment/utility lending system)
 
-> note by the way "Fellows" are students under the organization "Learn2Earn", Piscine candidates are prospective fellows under trials to get into the Learn2Earn program, learn2earn are the organization providers and the Fellows are the borrowers
+> "Fellows" are students under the organization "Learn2Earn", Piscine candidates are prospective fellows under trials to get into the Learn2Earn program, learn2earn are the organization providers 
+Fellows and piscine candidates are the borrowers
 
 ##
 
@@ -29,7 +30,7 @@ fellows = {"F001": "Ada", "F002": "John", "F003": "Grace"}
 borrow_records = []
 ```
 
-these starting data are not absolute, u can add to them, but do not remove from them also u can create mock data for up to 1000 fellows, and up to 5000 different equipments
+these starting data are not absolute, they are test data, i believe you can tweak them when necessary
 
 ##
 
@@ -52,7 +53,7 @@ fellow/
      |      |-------trial-period
 ```
 
-cohort should be addable so that when a new cohort resumes after a successful piscine they can be added to the fellow/cohort/ directory
+cohort should be addable so that when a new cohort resumes after a successful piscine trial they can be added to the "fellow/cohort/" directory
 
 ##
 
