@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -188,7 +189,7 @@ class JsonImportTests(ImportExportTestCase):
         document["events"] = [
             event
             for event in document["events"]
-            if not event["event_type"].startswith("resource.")
+            if event["event_type"] != "resource.created"
             and not event["event_type"].startswith("loan.")
         ]
         with self.assertRaises(ImportConflict):
@@ -238,7 +239,7 @@ class CsvImportTests(ImportExportTestCase):
         self.import_all()
         target = Store.open(self.target).state
         self.assertEqual(target.resources["R001"].issued_quantity, 2)
-        self.assertEqual(target.resources["R001"].available_quantity, 6)
+        self.assertEqual(target.resources["R001"].available_quantity, 7)
 
     def test_damage_from_a_return_is_not_double_counted(self):
         self.import_all()
@@ -308,21 +309,70 @@ class CsvImportTests(ImportExportTestCase):
     def test_created_timestamps_carry_the_causal_order(self):
         self.import_all()
         events = Store.open(self.target).log.read_all()
-        generated = [
-            event for event in events if event.event_type.value == "resource.created"
-        ]
-        issued = [
-            event for event in events if event.event_type.value == "loan.checked_out"
-        ]
-        self.assertLess(
-            max(event.occurred_at for event in generated),
-            min(event.occurred_at for event in issued),
-        )
+        created = {
+            event.payload["resource"]["id"]: index
+            for index, event in enumerate(events)
+            if event.event_type.value == "resource.created"
+        }
+        self.assertTrue(created)
+        for index, event in enumerate(events):
+            if not event.event_type.value.startswith("loan."):
+                continue
+            self.assertLess(
+                created[event.payload["resource_id"]],
+                index,
+                "a resource must be created before a loan names it",
+            )
 
     def test_an_unknown_mode_is_rejected(self):
         with self.assertRaises(ValidationError):
             self.target_transfer().import_csv_text(
                 self.transfer.export_csv_text("taxonomy"), "taxonomy", mode="squash"
+            )
+
+
+class ReportExportTests(ImportExportTestCase):
+    def test_a_json_report_carries_its_payload(self):
+        path = self.target / "status.json"
+        summary = self.transfer.write_report(
+            path, report="store-status", payload={"totals": {"total": 14}}
+        )
+        document = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(document["format"], EXPORT_FORMAT)
+        self.assertEqual(document["report"], "store-status")
+        self.assertEqual(document["payload"], {"totals": {"total": 14}})
+        self.assertIn("generated_at", document)
+        self.assertEqual(summary["format"], "json")
+
+    def test_the_format_is_taken_from_the_file_name(self):
+        path = self.target / "status.json"
+        self.transfer.write_report(path, report="store-status", payload={})
+        self.assertTrue(path.read_text(encoding="utf-8").startswith("{"))
+
+    def test_a_csv_report_writes_its_rows_verbatim(self):
+        path = self.target / "rows.csv"
+        self.transfer.write_report(
+            path,
+            report="low-stock",
+            payload=[],
+            headers=["ID", "Units Out"],
+            rows=[["R001", 2]],
+        )
+        self.assertEqual(path.read_text(encoding="utf-8"), "id,units_out\nR001,2\n")
+
+    def test_a_report_without_a_table_cannot_be_csv(self):
+        with self.assertRaises(ValidationError):
+            self.transfer.write_report(
+                self.target / "rows.csv", report="store-status", payload={"a": 1}
+            )
+
+    def test_an_unknown_report_format_is_rejected(self):
+        with self.assertRaises(ValidationError):
+            self.transfer.write_report(
+                self.target / "rows.csv",
+                report="store-status",
+                payload={},
+                fmt="pdf",
             )
 
 

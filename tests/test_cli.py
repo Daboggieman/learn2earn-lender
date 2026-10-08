@@ -59,7 +59,14 @@ class ParserTests(CliTestCase):
             with self.assertRaises(SystemExit) as caught:
                 main(["--help"])
         self.assertEqual(caught.exception.code, 0)
-        for command in ("add-resource", "mark-condition", "report-low-stock", "seed"):
+        for command in (
+            "add-resource",
+            "mark-condition",
+            "report-low-stock",
+            "seed",
+            "export",
+            "import",
+        ):
             self.assertIn(command, stdout.getvalue())
 
 
@@ -510,6 +517,200 @@ class JsonOutputTests(CliTestCase):
         self.run_cli("--actor", "grace", "add-category", "Lab Gear")
         store = Store.open(self.data_dir)
         self.assertEqual(store.log.read_all()[-1].actor, "grace")
+
+
+class TransferCommandTests(CliTestCase):
+    def setUp(self):
+        super().setUp()
+        self.seed()
+        self._other_tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._other_tmp.cleanup)
+        self.other_dir = str(Path(self._other_tmp.name) / "data")
+        self.files = Path(self._other_tmp.name) / "files"
+        self.files.mkdir()
+
+    def run_into(self, data_dir, *argv):
+        stdout, stderr = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            code = main(["--data-dir", data_dir, *argv])
+        return code, stdout.getvalue(), stderr.getvalue()
+
+    def snapshot(self, data_dir):
+        state = Store.open(data_dir).state
+        return {
+            name: {key: value.to_dict() for key, value in getattr(state, name).items()}
+            for name in ("taxonomy", "groups", "resources", "people", "loans")
+        }
+
+    def export_json(self):
+        path = self.files / "backup.json"
+        code, out, err = self.run_cli("export", "--out", str(path))
+        self.assertEqual(code, 0, err)
+        return path
+
+    def test_export_json_reports_the_event_count(self):
+        payload = self.run_json("export", "--out", str(self.files / "backup.json"))
+        self.assertEqual(payload["format"], "json")
+        self.assertEqual(payload["events"], len(Store.open(self.data_dir).log.read_all()))
+
+    def test_export_json_writes_a_readable_file(self):
+        path = self.export_json()
+        self.assertEqual(
+            json.loads(path.read_text(encoding="utf-8"))["format"],
+            "learn2earn-lender/1",
+        )
+
+    def test_json_round_trips_through_the_cli(self):
+        path = self.export_json()
+        code, out, err = self.run_into(self.other_dir, "import", str(path))
+        self.assertEqual(code, 0, err)
+        self.assertIn("Imported", out)
+        self.assertEqual(self.snapshot(self.other_dir), self.snapshot(self.data_dir))
+
+    def test_importing_twice_reports_what_it_skipped(self):
+        path = self.export_json()
+        self.run_into(self.other_dir, "import", str(path))
+        payload = self.run_into(self.other_dir, "--json", "import", str(path))[1]
+        self.assertEqual(json.loads(payload)["imported"], 0)
+
+    def test_replace_mode_discards_the_destination_first(self):
+        path = self.export_json()
+        self.run_into(self.other_dir, "seed")
+        self.run_into(self.other_dir, "add-category", "Scratch")
+        code, out, err = self.run_into(
+            self.other_dir, "import", str(path), "--mode", "replace"
+        )
+        self.assertEqual(code, 0, err)
+        self.assertIn("Replaced", out)
+        self.assertEqual(self.snapshot(self.other_dir), self.snapshot(self.data_dir))
+
+    def test_csv_dataset_is_inferred_from_the_file_name(self):
+        path = self.files / "resources.csv"
+        payload = self.run_json("export", "--out", str(path))
+        self.assertEqual(payload["dataset"], "resources")
+        self.assertNotIn("taxonomy", path.read_text(encoding="utf-8").splitlines()[0])
+
+    def test_csv_datasets_round_trip_through_the_cli(self):
+        for dataset in ("taxonomy", "groups", "resources", "people", "loans"):
+            path = self.files / f"{dataset}.csv"
+            code, out, err = self.run_cli("export", "--out", str(path))
+            self.assertEqual(code, 0, err)
+            code, out, err = self.run_into(self.other_dir, "import", str(path))
+            self.assertEqual(code, 0, err)
+        self.assertEqual(self.snapshot(self.other_dir), self.snapshot(self.data_dir))
+
+    def test_an_explicit_format_overrides_the_file_name(self):
+        path = self.files / "backup.txt"
+        code, out, err = self.run_cli("export", "--out", str(path), "--format", "json")
+        self.assertEqual(code, 0, err)
+        document = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(document["format"], "learn2earn-lender/1")
+        self.assertTrue(document["events"])
+
+    def test_an_unrecognisable_file_name_is_a_validation_error(self):
+        code, out, err = self.run_cli("export", "--out", str(self.files / "backup.txt"))
+        self.assertEqual(code, 2)
+        self.assertIn("--format", err)
+
+    def test_csv_without_an_identifiable_dataset_is_a_validation_error(self):
+        code, out, err = self.run_cli("export", "--out", str(self.files / "dump.csv"))
+        self.assertEqual(code, 2)
+        self.assertIn("a dataset is required", err)
+
+    def test_importing_a_missing_file_reports_a_storage_error(self):
+        code, out, err = self.run_into(self.other_dir, "import", str(self.files / "nope.json"))
+        self.assertEqual(code, 6)
+        self.assertTrue(err.strip())
+
+    def test_merging_a_dataset_twice_is_a_conflict(self):
+        path = self.files / "taxonomy.csv"
+        self.run_cli("export", "--out", str(path))
+        self.run_into(self.other_dir, "import", str(path))
+        code, out, err = self.run_into(self.other_dir, "import", str(path))
+        self.assertEqual(code, 7)
+        self.assertTrue(err.strip())
+
+
+class ReportExportCommandTests(CliTestCase):
+    def setUp(self):
+        super().setUp()
+        self.seed()
+        self._tmp_out = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp_out.cleanup)
+        self.files = Path(self._tmp_out.name)
+
+    def test_store_status_writes_a_json_report(self):
+        path = self.files / "status.json"
+        summary = self.run_json("report-store-status", "--out", str(path))
+        self.assertEqual(summary, {
+            "path": str(path), "format": "json", "report": "store-status",
+        })
+        document = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(document["report"], "store-status")
+        self.assertEqual(document["payload"]["totals"]["total"], 18)
+
+    def test_low_stock_writes_a_csv_report(self):
+        self.run_cli("mark-condition", "R003", "damaged", "1")
+        path = self.files / "low.csv"
+        self.run_cli("report-low-stock", "--out", str(path))
+        lines = path.read_text(encoding="utf-8").splitlines()
+        self.assertEqual(lines[0], "id,name,category,available,total,needed")
+        self.assertEqual(lines[1].split(",")[1], "Headset")
+
+    def test_most_borrowed_csv_names_its_columns(self):
+        path = self.files / "most.csv"
+        code, out, err = self.run_cli("report-most-borrowed", "--out", str(path))
+        self.assertEqual(code, 0, err)
+        self.assertEqual(
+            path.read_text(encoding="utf-8").splitlines()[0], "id,name,units_out"
+        )
+
+    def test_inventory_report_export_keeps_the_category_rollup(self):
+        path = self.files / "inventory.json"
+        self.run_cli("report-inventory", "--out", str(path))
+        payload = json.loads(path.read_text(encoding="utf-8"))["payload"]
+        self.assertEqual(
+            {row["category"] for row in payload["categories"]},
+            {"Accessories", "Electronics"},
+        )
+
+    def test_borrower_history_exports_its_loans(self):
+        self.run_cli("checkout", "R001", "F001", "2")
+        path = self.files / "history.csv"
+        code, out, err = self.run_cli(
+            "report-borrower-history", "F001", "--out", str(path)
+        )
+        self.assertEqual(code, 0, err)
+        lines = path.read_text(encoding="utf-8").splitlines()
+        self.assertEqual(lines[0], "loan,resource,borrower,qty,out,issued,due,returned,status")
+        self.assertEqual(len(lines), 2)
+
+    def test_the_table_is_still_printed_next_to_the_file(self):
+        self.run_cli("mark-condition", "R003", "damaged", "1")
+        path = self.files / "low.csv"
+        code, out, err = self.run_cli("report-low-stock", "--out", str(path))
+        self.assertEqual(code, 0, err)
+        self.assertIn("Headset", out)
+        self.assertIn("Wrote 1 low-stock row(s)", out)
+
+    def test_an_unrecognisable_file_name_is_a_validation_error(self):
+        code, out, err = self.run_cli(
+            "report-low-stock", "--out", str(self.files / "low.txt")
+        )
+        self.assertEqual(code, 2)
+        self.assertIn("--format", err)
+
+    def test_an_explicit_format_wins_over_the_file_name(self):
+        path = self.files / "low.txt"
+        code, out, err = self.run_cli(
+            "report-low-stock", "--out", str(path), "--format", "csv"
+        )
+        self.assertEqual(code, 0, err)
+        self.assertTrue(path.read_text(encoding="utf-8").startswith("id,name"))
+
+    def test_exporting_a_report_does_not_touch_the_transaction_log(self):
+        self.run_cli("report-store-status", "--out", str(self.files / "status.json"))
+        self.assertEqual(len(Store.open(self.data_dir).log.read_all()), 29)
 
 
 if __name__ == "__main__":

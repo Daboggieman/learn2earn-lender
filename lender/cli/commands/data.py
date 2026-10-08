@@ -6,8 +6,13 @@ from pathlib import Path
 
 from .. import output
 from ..context import Context
-from ...domain.errors import ConflictError, ValidationError
-from ...services.import_export_service import DATASETS, FORMATS, IMPORT_MODES
+from ...domain.errors import ConflictError
+from ...services.import_export_service import (
+    DATASETS,
+    FORMATS,
+    IMPORT_MODES,
+    format_from_path,
+)
 from ...storage import json_repository
 from ...storage.seed_data import (
     SEED_START,
@@ -86,15 +91,7 @@ def register(subparsers: argparse._SubParsersAction) -> None:
 
 
 def _resolve_format(explicit: str | None, path: str | Path) -> str:
-    if explicit:
-        return explicit
-    suffix = Path(path).suffix.lower().lstrip(".")
-    if suffix in FORMATS:
-        return suffix
-    raise ValidationError(
-        f"cannot tell the format of {str(path)!r} from its name; "
-        f"pass --format {' or --format '.join(FORMATS)}"
-    )
+    return explicit or format_from_path(path)
 
 
 def _resolve_dataset(explicit: str | None, path: str | Path, fmt: str) -> str | None:

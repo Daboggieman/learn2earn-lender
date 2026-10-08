@@ -7,6 +7,7 @@ from ..context import Context
 from ...domain.equipment import Condition
 from ...domain.transactions import Transaction
 from ...services.lending_service import DEFAULT_LOAN_DAYS
+from .reports import add_export_options, announce_export, export_report
 
 LOAN_COLUMNS = [
     "LOAN",
@@ -67,6 +68,7 @@ def register(subparsers: argparse._SubParsersAction) -> None:
         "report-borrower-history", help="Full lending history for one borrower"
     )
     borrower.add_argument("borrower", help="Borrower ID")
+    add_export_options(borrower)
     borrower.set_defaults(handler=cmd_report_borrower_history)
 
 
@@ -176,24 +178,28 @@ def cmd_overdue(args: argparse.Namespace, ctx: Context) -> int:
 def cmd_report_borrower_history(args: argparse.Namespace, ctx: Context) -> int:
     summary = ctx.lending.borrower_history(args.borrower)
     loans = summary["loans"]
+    payload = {
+        **{
+            key: value
+            for key, value in summary.items()
+            if key not in {"loans", "open_loans", "overdue_loans"}
+        },
+        "loans": [loan.to_dict() for loan in loans],
+        "open_loan_ids": [loan.transaction_id for loan in summary["open_loans"]],
+        "overdue_loan_ids": [loan.transaction_id for loan in summary["overdue_loans"]],
+    }
+    table = [_loan_row(loan, ctx) for loan in loans]
+    export = export_report(
+        args,
+        ctx,
+        report="borrower-history",
+        payload=payload,
+        headers=LOAN_COLUMNS,
+        rows=table,
+    )
 
     if ctx.as_json:
-        output.print_json(
-            {
-                **{
-                    key: value
-                    for key, value in summary.items()
-                    if key not in {"loans", "open_loans", "overdue_loans"}
-                },
-                "loans": [loan.to_dict() for loan in loans],
-                "open_loan_ids": [
-                    loan.transaction_id for loan in summary["open_loans"]
-                ],
-                "overdue_loan_ids": [
-                    loan.transaction_id for loan in summary["overdue_loans"]
-                ],
-            }
-        )
+        output.print_json(export if export else payload)
         return 0
 
     output.info(
@@ -208,7 +214,8 @@ def cmd_report_borrower_history(args: argparse.Namespace, ctx: Context) -> int:
     )
     if not loans:
         output.info("No lending transactions for this borrower yet.")
-        return 0
-    print()
-    output.print_table(LOAN_COLUMNS, [_loan_row(loan, ctx) for loan in loans])
+    else:
+        print()
+        output.print_table(LOAN_COLUMNS, table)
+    announce_export(export)
     return 0

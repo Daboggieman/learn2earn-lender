@@ -115,6 +115,24 @@ def _event_order(event: Event) -> tuple[str, str]:
     return (event.occurred_at, event.event_id)
 
 
+def format_from_path(path: str | Path) -> str:
+    suffix = Path(path).suffix.lower().lstrip(".")
+    if suffix in FORMATS:
+        return suffix
+    raise ValidationError(
+        f"cannot tell the format of {str(path)!r} from its name; "
+        f"pass --format {' or --format '.join(FORMATS)}"
+    )
+
+
+def csv_text(headers: Sequence[str], rows: Iterable[Sequence[Any]]) -> str:
+    buffer = io.StringIO()
+    writer = csv.writer(buffer, lineterminator="\n")
+    writer.writerow([str(header).strip().lower().replace(" ", "_") for header in headers])
+    writer.writerows(rows)
+    return buffer.getvalue()
+
+
 class ImportExportService:
     def __init__(self, store: Store) -> None:
         self._store = store
@@ -163,6 +181,50 @@ class ImportExportService:
             }
         raise ValidationError(
             f"unknown export format {fmt!r}: expected one of {', '.join(FORMATS)}"
+        )
+
+    def write_report(
+        self,
+        path: str | Path,
+        *,
+        report: str,
+        payload: Any,
+        headers: Sequence[str] | None = None,
+        rows: Sequence[Sequence[Any]] | None = None,
+        fmt: str | None = None,
+    ) -> dict[str, Any]:
+        target = Path(path).expanduser()
+        chosen = fmt or format_from_path(target)
+
+        if chosen == "json":
+            json_repository.write_json(
+                target,
+                {
+                    "format": EXPORT_FORMAT,
+                    "report": report,
+                    "generated_at": now_iso(),
+                    "payload": payload,
+                },
+            )
+            return {"path": str(target), "format": "json", "report": report}
+
+        if chosen == "csv":
+            if headers is None or rows is None:
+                raise ValidationError(
+                    f"the {report} report has no table to write as CSV; "
+                    f"use --format json or a .json file name"
+                )
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(csv_text(headers, rows), encoding="utf-8", newline="")
+            return {
+                "path": str(target),
+                "format": "csv",
+                "report": report,
+                "rows": len(rows),
+            }
+
+        raise ValidationError(
+            f"unknown export format {chosen!r}: expected one of {', '.join(FORMATS)}"
         )
 
     def import_file(

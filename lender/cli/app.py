@@ -30,6 +30,12 @@ examples:
   lender find-by-category Electronics
   lender report-store-status
   lender report-low-stock
+  lender export --out backup.json
+  lender export --out resources.csv
+  lender import backup.json --mode replace
+  lender import loans.csv
+  lender report-low-stock --out low-stock.csv
+  lender report-store-status --out status.json
 """
 
 
