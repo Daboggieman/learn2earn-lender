@@ -192,8 +192,13 @@ def _emit_taxonomy(builder: _EventBuilder) -> None:
             )
 
 
-def _emit_groups(builder: _EventBuilder, cohorts: list[str], trials: list[str]) -> None:
-    existing: list[str] = []
+def _emit_groups(
+    builder: _EventBuilder,
+    cohorts: list[str],
+    trials: list[str],
+    reserved_ids: Iterable[str] = (),
+) -> None:
+    existing: list[str] = _reserved_with_prefix(reserved_ids, "G")
     for name, group_type in [
         *((cohort, GroupType.COHORT) for cohort in cohorts),
         *((trial, GroupType.TRIAL) for trial in trials),
@@ -318,29 +323,38 @@ def mock_events(
     loans: int = 0,
     seed: int = 20260101,
     start: datetime | None = None,
+    emit_taxonomy: bool = True,
+    reserved_ids: Iterable[str] = (),
 ) -> list[Event]:
     if min(fellows, piscine, equipment, cohorts, trials, loans) < 0:
         raise ValueError("mock counts must not be negative")
 
     rng = random.Random(seed)
     builder = _EventBuilder(start or SEED_START)
+    reserved = set(reserved_ids)
 
     cohort_names = [f"cluster-{index + 1}-mock" for index in range(cohorts)]
     trial_names = [f"mock-trial-{index + 1}" for index in range(trials)]
 
-    _emit_taxonomy(builder)
-    _emit_groups(builder, cohort_names, trial_names)
-    _emit_resources(builder, _mock_resources(rng, equipment))
-    _emit_people(builder, _mock_people(rng, fellows, piscine, cohort_names, trial_names))
+    if emit_taxonomy:
+        _emit_taxonomy(builder)
+    _emit_groups(builder, cohort_names, trial_names, reserved)
+    _emit_resources(builder, _mock_resources(rng, equipment, reserved))
+    _emit_people(
+        builder,
+        _mock_people(rng, fellows, piscine, cohort_names, trial_names, reserved),
+    )
     if loans:
         _emit_loans(builder, rng, loans)
     return builder.events
 
 
-def _mock_resources(rng: random.Random, count: int) -> list[dict[str, object]]:
+def _mock_resources(
+    rng: random.Random, count: int, reserved_ids: Iterable[str] = ()
+) -> list[dict[str, object]]:
     if count <= 0:
         return []
-    existing: list[str] = []
+    existing: list[str] = _reserved_with_prefix(reserved_ids, "R")
     resources: list[dict[str, object]] = []
     for index in range(count):
         category_name, subcategory_name, stock, needed = MOCK_SLOTS[index % len(MOCK_SLOTS)]
@@ -366,11 +380,12 @@ def _mock_people(
     piscine: int,
     cohort_names: list[str],
     trial_names: list[str],
+    reserved_ids: Iterable[str] = (),
 ) -> list[tuple[str, str, str, str]]:
     names = _unique_names(rng, fellows + piscine)
     people: list[tuple[str, str, str, str]] = []
-    fellow_ids: list[str] = []
-    piscine_ids: list[str] = []
+    fellow_ids: list[str] = _reserved_with_prefix(reserved_ids, "F")
+    piscine_ids: list[str] = _reserved_with_prefix(reserved_ids, "P")
 
     for index in range(fellows):
         person_id = next_sequential_id("F", fellow_ids)
@@ -403,30 +418,29 @@ def _unique_names(rng: random.Random, count: int) -> list[str]:
 
 
 def _emit_loans(builder: _EventBuilder, rng: random.Random, count: int) -> None:
-    resources = [
-        (
-            str(event.payload["resource"]["id"]),
-            int(event.payload["resource"]["available_quantity"]),
-        )
-        for event in builder.events
-        if event.event_type is EventType.RESOURCE_CREATED
-    ]
+    available_by_resource: dict[str, int] = {}
+    for event in builder.events:
+        if event.event_type is EventType.RESOURCE_CREATED:
+            raw = event.payload["resource"]
+            available_by_resource.setdefault(
+                str(raw["id"]), int(raw["available_quantity"])
+            )
+
     people = [
         str(event.payload["person"]["id"])
         for event in builder.events
         if event.event_type is EventType.PERSON_CREATED
     ]
-    if not resources or not people:
+    if not available_by_resource or not people:
         return
 
-    outstanding: dict[str, int] = {
-        resource_id: available for resource_id, available in resources
-    }
+    outstanding = dict(available_by_resource)
+    resource_ids = sorted(outstanding)
     transaction_counter = 0
     loan_index = 0
 
     for _ in range(count):
-        resource_id, _ = rng.choice(resources)
+        resource_id = rng.choice(resource_ids)
         available = outstanding.get(resource_id, 0)
         if available <= 0:
             continue
@@ -479,4 +493,5 @@ def _emit_loans(builder: _EventBuilder, rng: random.Random, count: int) -> None:
                 occurred_at=returned_at,
                 notes="mock",
             )
-            outstanding[resource_id] = outstanding.get(resource_id, 0) + quantity
+            if condition is Condition.GOOD:
+                outstanding[resource_id] = outstanding.get(resource_id, 0) + quantity

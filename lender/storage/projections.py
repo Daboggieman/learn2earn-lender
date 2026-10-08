@@ -17,7 +17,15 @@ from .paths import DataPaths
 from .transaction_log import TransactionLog
 
 RESOURCE_UPDATE_FIELDS = frozenset(
-    {"name", "category_id", "subcategory_id", "needed_quantity", "notes", "total_quantity"}
+    {
+        "name",
+        "category_id",
+        "subcategory_id",
+        "needed_quantity",
+        "notes",
+        "total_quantity",
+        "status",
+    }
 )
 TAXONOMY_UPDATE_FIELDS = frozenset({"name"})
 GROUP_UPDATE_FIELDS = frozenset({"name", "status"})
@@ -174,6 +182,8 @@ def _apply_resource_updated(state: State, event: Event) -> None:
     for key, value in changes.items():
         if key == "needed_quantity":
             value = require_non_negative(value, "needed_quantity")
+        elif key == "status":
+            value = ResourceStatus.parse(value)
         setattr(resource, key, value)
 
     resource.check_invariant()

@@ -7,7 +7,13 @@ from .. import output
 from ..context import Context
 from ...domain.errors import ConflictError
 from ...storage import json_repository
-from ...storage.seed_data import SEED_START, baseline_events, mock_events, renumber_events
+from ...storage.seed_data import (
+    SEED_START,
+    baseline_events,
+    entity_ids,
+    mock_events,
+    renumber_events,
+)
 
 
 def register(subparsers: argparse._SubParsersAction) -> None:
@@ -63,18 +69,19 @@ def cmd_seed(args: argparse.Namespace, ctx: Context) -> int:
         "equipment": args.mock_equipment,
         "loans": args.mock_loans,
     }
-    if any(mock_counts.values()) or args.mock_cohorts or args.mock_trials:
-        if any(mock_counts.values()):
-            events = events + mock_events(
-                fellows=args.mock_fellows,
-                piscine=args.mock_piscine,
-                equipment=args.mock_equipment,
-                cohorts=args.mock_cohorts,
-                trials=args.mock_trials,
-                loans=args.mock_loans,
-                seed=args.random_seed,
-                start=SEED_START + timedelta(days=1),
-            )
+    if any(mock_counts.values()):
+        events = events + mock_events(
+            fellows=args.mock_fellows,
+            piscine=args.mock_piscine,
+            equipment=args.mock_equipment,
+            cohorts=args.mock_cohorts,
+            trials=args.mock_trials,
+            loans=args.mock_loans,
+            seed=args.random_seed,
+            start=SEED_START + timedelta(days=1),
+            emit_taxonomy=False,
+            reserved_ids=entity_ids(events),
+        )
 
     events = renumber_events(events)
     ctx.store.extend(events)
