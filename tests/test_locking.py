@@ -129,12 +129,18 @@ class LockedStoreTestCase(unittest.TestCase):
             stderr=subprocess.PIPE,
             text=True,
         )
-        self.addCleanup(process.kill)
+        self.addCleanup(self.stop, process)
         ready = process.stdout.readline().strip()
         if ready != "held":
             process.kill()
             self.fail(f"the lock holder did not start: {process.stderr.read()}")
         return process
+
+    def stop(self, process):
+        process.kill()
+        process.wait(timeout=30)
+        process.stdout.close()
+        process.stderr.close()
 
     def spawn_cli(self, *argv):
         return subprocess.Popen(
