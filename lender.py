@@ -6,7 +6,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from learn2earn_lender.cli.app import main
+from lender.cli.app import main
 
 if __name__ == "__main__":
     sys.exit(main())

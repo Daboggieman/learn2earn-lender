@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import random
+from collections.abc import Iterable
 from dataclasses import replace
 from datetime import datetime, timedelta
 
@@ -109,6 +110,25 @@ class _EventBuilder:
         )
         self.events.append(event)
         return event
+
+
+def entity_ids(events: Iterable[Event]) -> set[str]:
+    identifiers: set[str] = set()
+    for event in events:
+        payload = event.payload
+        if event.event_type is EventType.RESOURCE_CREATED:
+            identifiers.add(str(payload["resource"]["id"]))
+        elif event.event_type is EventType.PERSON_CREATED:
+            identifiers.add(str(payload["person"]["id"]))
+        elif event.event_type is EventType.GROUP_CREATED:
+            identifiers.add(str(payload["group"]["id"]))
+        elif event.event_type is EventType.TAXONOMY_CREATED:
+            identifiers.add(str(payload["node"]["id"]))
+    return identifiers
+
+
+def _reserved_with_prefix(reserved: Iterable[str], prefix: str) -> list[str]:
+    return [str(item) for item in reserved if str(item).startswith(prefix)]
 
 
 def renumber_events(events: list[Event]) -> list[Event]:
