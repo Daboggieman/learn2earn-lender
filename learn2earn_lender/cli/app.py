@@ -1,0 +1,85 @@
+from __future__ import annotations
+
+import argparse
+import sys
+from collections.abc import Sequence
+
+from .. import __version__
+from ..domain.errors import LenderError
+from ..storage.store import Store
+from . import output
+from .commands import register_all
+from .context import Context
+
+EPILOG = """\
+examples:
+  lender seed
+  lender seed --mock-fellows 200 --mock-piscine 60 --mock-equipment 40 --mock-loans 80
+  lender add-category "Lab Gear"
+  lender add-subcategory "Lab Gear" "Oscilloscopes"
+  lender add-resource --name "Dell Latitude" --category Electronics --subcategory laptop --total 12
+  lender mark-condition R001 faulty 1 --reason "screen flicker"
+  lender find-by-category Electronics
+  lender report-store-status
+  lender report-low-stock
+"""
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="lender",
+        description="Learn2Earn Lender — equipment inventory and lending manager.",
+        epilog=EPILOG,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--data-dir",
+        help="Directory holding the transaction log and projections (default: ./data)",
+    )
+    parser.add_argument(
+        "--actor",
+        default="admin",
+        help="Name recorded on every event this run writes (default: admin)",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        dest="as_json",
+        help="Emit machine-readable JSON instead of tables",
+    )
+    parser.add_argument(
+        "--version", action="version", version=f"learn2earn-lender {__version__}"
+    )
+
+    subparsers = parser.add_subparsers(dest="command", metavar="COMMAND", required=True)
+    register_all(subparsers)
+    return parser
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    output.configure_streams()
+    parser = build_parser()
+    args = parser.parse_args(argv)
+
+    try:
+        store = Store.open(args.data_dir)
+    except LenderError as exc:
+        output.fail(str(exc))
+        return exc.exit_code
+
+    ctx = Context.build(store, actor=args.actor, as_json=args.as_json)
+
+    try:
+        return args.handler(args, ctx)
+    except LenderError as exc:
+        output.fail(str(exc))
+        return exc.exit_code
+    except BrokenPipeError:
+        return 0
+    except KeyboardInterrupt:
+        output.fail("interrupted")
+        return 130
+
+
+if __name__ == "__main__":
+    sys.exit(main())

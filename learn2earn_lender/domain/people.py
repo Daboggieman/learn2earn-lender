@@ -1,12 +1,3 @@
-"""Borrowers.
-
-Two kinds of people can borrow: **Fellows** (accepted students, members of a
-cohort) and **Piscine candidates** (prospective Fellows in a trial period).
-They share one record shape and differ by ``type`` and by the group they
-belong to, so a candidate who passes trials is promoted by changing two
-fields rather than by being re-created.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -35,8 +26,6 @@ class PersonType(str, Enum):
 
 
 class PersonStatus(str, Enum):
-    """``active`` borrowers may borrow; everything else is blocked."""
-
     ACTIVE = "active"
     INACTIVE = "inactive"
     REMOVED = "removed"
@@ -53,8 +42,6 @@ class PersonStatus(str, Enum):
 
 @dataclass
 class Person:
-    """A Fellow or a Piscine candidate."""
-
     id: str
     name: str
     type: PersonType
@@ -74,7 +61,6 @@ class Person:
 
     @property
     def can_borrow(self) -> bool:
-        """Only active borrowers may take equipment (BUILD_PLAN §9.5)."""
         return self.status is PersonStatus.ACTIVE
 
     def require_can_borrow(self) -> None:
@@ -118,11 +104,5 @@ class Person:
 
 
 def make_person_id(existing: list[str], person_type: PersonType) -> str:
-    """Fellows are ``F###``; Piscine candidates are ``P###``.
-
-    Distinct prefixes keep the two populations readable in reports and make a
-    mis-typed borrower ID fail loudly instead of silently borrowing as the
-    wrong person.
-    """
     prefix = "F" if person_type is PersonType.FELLOW else "P"
     return next_sequential_id(prefix, existing)

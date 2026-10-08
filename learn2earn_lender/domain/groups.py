@@ -1,10 +1,3 @@
-"""Borrower groups: cohorts and Piscine trial periods.
-
-A cohort is the group a Piscine candidate joins after passing trials, so the
-two share a shape and differ only by ``type``. Groups are created at runtime;
-nothing here is a fixed list.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -17,8 +10,6 @@ from ..validators.ids import next_sequential_id, validate_id
 
 
 class GroupType(str, Enum):
-    """``cohort`` holds accepted Fellows; ``trial`` holds Piscine candidates."""
-
     COHORT = "cohort"
     TRIAL = "trial"
 
@@ -51,8 +42,6 @@ class GroupStatus(str, Enum):
 
 @dataclass
 class Group:
-    """A cohort or a Piscine trial period."""
-
     id: str
     name: str
     type: GroupType

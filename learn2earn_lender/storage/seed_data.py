@@ -1,17 +1,7 @@
-"""Startup (seed) data and deterministic mock data generation.
-
-Both are expressed as **events**, not as state files. Seeding is therefore the
-same operation as any other change to the system: it appends to the log, and
-the projections are rebuilt from it. That keeps one code path for state and
-removes the possibility of seed data and the log disagreeing.
-
-Mock generation is deterministic — same arguments produce byte-identical
-events — so tests and live demos are repeatable (BUILD_PLAN §3).
-"""
-
 from __future__ import annotations
 
 import random
+from dataclasses import replace
 from datetime import datetime, timedelta
 
 from ..domain.equipment import Condition, ResourceStatus, empty_condition_counts
@@ -24,15 +14,7 @@ from ..validators.dates import to_iso
 from ..validators.ids import next_sequential_id
 from ..validators.strings import slugify
 
-#: Fixed clock for the baseline seed, so seeded data is identical on every run.
 SEED_START = datetime(2026, 1, 1, 8, 0, 0)
-
-# ----------------------------------------------------------------------
-# Baseline taxonomy (BUILD_PLAN §2)
-#
-# These are ordinary rows, not constants the code branches on. Nothing stops
-# a user from renaming "electronics" or adding a fourth category.
-# ----------------------------------------------------------------------
 
 SEED_TAXONOMY: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("Electronics", ("desktop-computer", "laptop")),
@@ -50,7 +32,6 @@ SEED_COHORTS: tuple[str, ...] = (
 
 SEED_TRIALS: tuple[str, ...] = tuple(f"trial-period-{index}" for index in range(1, 7))
 
-#: The three startup resources from BUILD_PLAN §3, preserved exactly.
 SEED_RESOURCES: tuple[dict[str, object], ...] = (
     {
         "id": "R001",
@@ -75,7 +56,6 @@ SEED_RESOURCES: tuple[dict[str, object], ...] = (
     },
 )
 
-#: The three startup Fellows from BUILD_PLAN §3, preserved exactly.
 SEED_PEOPLE: tuple[tuple[str, str, str], ...] = (
     ("F001", "Ada", "cluster-1-feb"),
     ("F002", "John", "cluster-2-feb"),
@@ -84,29 +64,23 @@ SEED_PEOPLE: tuple[tuple[str, str, str], ...] = (
 
 
 def category_id(name: str) -> str:
-    """Taxonomy node ID for a category — the slug of its name."""
     return slugify(name, "category name")
 
 
 def subcategory_id(category_name: str, subcategory_name: str) -> str:
-    """Taxonomy node ID for a subcategory.
-
-    Prefixed with the parent slug because subcategory IDs share one namespace:
-    two categories may each legitimately contain an ``others``.
-    """
-    return f"{slugify(category_name, 'category name')}-{slugify(subcategory_name, 'subcategory name')}"
+    return (
+        f"{slugify(category_name, 'category name')}"
+        f"-{slugify(subcategory_name, 'subcategory name')}"
+    )
 
 
 class _EventBuilder:
-    """Accumulates events with deterministic IDs and monotonically rising times."""
-
     def __init__(self, start: datetime) -> None:
         self._clock = start
         self._counters: dict[str, int] = {}
         self.events: list[Event] = []
 
     def tick(self, seconds: int = 1) -> str:
-        """Advance the clock and return the new timestamp."""
         self._clock += timedelta(seconds=seconds)
         return to_iso(self._clock)
 
@@ -137,24 +111,26 @@ class _EventBuilder:
         return event
 
 
-# ----------------------------------------------------------------------
-# Baseline seed
-# ----------------------------------------------------------------------
+def renumber_events(events: list[Event]) -> list[Event]:
+    ordered = sorted(events, key=lambda event: (event.occurred_at, event.event_id))
+    counters: dict[str, int] = {}
+    result: list[Event] = []
+    for event in ordered:
+        key = event.date_key
+        counters[key] = counters.get(key, 0) + 1
+        result.append(replace(event, event_id=format_event_id(key, counters[key])))
+    return result
 
 
 def baseline_events(start: datetime | None = None) -> list[Event]:
-    """The required startup data, as a replayable event list.
-
-    Produces the seed taxonomy, groups, resources and Fellows described in
-    BUILD_PLAN §2–§3. Existing seed records are never removed by later seed
-    runs; this function is the pristine baseline used to initialise an empty
-    data directory.
-    """
     builder = _EventBuilder(start or SEED_START)
     _emit_taxonomy(builder)
     _emit_groups(builder, list(SEED_COHORTS), list(SEED_TRIALS))
     _emit_resources(builder, SEED_RESOURCES)
-    _emit_people(builder, [(pid, name, "fellow", cohort) for pid, name, cohort in SEED_PEOPLE])
+    _emit_people(
+        builder,
+        [(pid, name, "fellow", cohort) for pid, name, cohort in SEED_PEOPLE],
+    )
     return builder.events
 
 
@@ -198,7 +174,10 @@ def _emit_taxonomy(builder: _EventBuilder) -> None:
 
 def _emit_groups(builder: _EventBuilder, cohorts: list[str], trials: list[str]) -> None:
     existing: list[str] = []
-    for cohort in cohorts:
+    for name, group_type in [
+        *((cohort, GroupType.COHORT) for cohort in cohorts),
+        *((trial, GroupType.TRIAL) for trial in trials),
+    ]:
         group_id = next_sequential_id("G", existing, width=3)
         existing.append(group_id)
         moment = builder.tick()
@@ -207,26 +186,8 @@ def _emit_groups(builder: _EventBuilder, cohorts: list[str], trials: list[str]) 
             {
                 "group": {
                     "id": group_id,
-                    "name": cohort,
-                    "type": GroupType.COHORT.value,
-                    "status": GroupStatus.ACTIVE.value,
-                    "created_at": moment,
-                    "updated_at": moment,
-                }
-            },
-            occurred_at=moment,
-        )
-    for trial in trials:
-        group_id = next_sequential_id("G", existing, width=3)
-        existing.append(group_id)
-        moment = builder.tick()
-        builder.add(
-            EventType.GROUP_CREATED,
-            {
-                "group": {
-                    "id": group_id,
-                    "name": trial,
-                    "type": GroupType.TRIAL.value,
+                    "name": name,
+                    "type": group_type.value,
                     "status": GroupStatus.ACTIVE.value,
                     "created_at": moment,
                     "updated_at": moment,
@@ -237,12 +198,13 @@ def _emit_groups(builder: _EventBuilder, cohorts: list[str], trials: list[str]) 
 
 
 def _emit_resources(
-    builder: _EventBuilder, resources: tuple[dict[str, object], ...] | list[dict[str, object]]
+    builder: _EventBuilder,
+    resources: tuple[dict[str, object], ...] | list[dict[str, object]],
 ) -> None:
     for entry in resources:
         cat_id = category_id(str(entry["category"]))
         sub_id = subcategory_id(str(entry["category"]), str(entry["subcategory"]))
-        total = int(entry["total"])  # type: ignore[arg-type]
+        total = int(entry["total"])
         moment = builder.tick()
         builder.add(
             EventType.RESOURCE_CREATED,
@@ -256,7 +218,7 @@ def _emit_resources(
                     "available_quantity": total,
                     "issued_quantity": 0,
                     "condition_counts": empty_condition_counts(),
-                    "needed_quantity": int(entry.get("needed", 0)),  # type: ignore[arg-type]
+                    "needed_quantity": int(entry.get("needed", 0)),
                     "status": ResourceStatus.ACTIVE.value,
                     "created_at": moment,
                     "updated_at": moment,
@@ -267,14 +229,7 @@ def _emit_resources(
         )
 
 
-def _emit_people(
-    builder: _EventBuilder, people: list[tuple[str, str, str, str]]
-) -> None:
-    """``people`` is a list of ``(id, name, type, group_name)``.
-
-    Group names are resolved against groups already emitted in this batch, so
-    mock generation can reference cohorts it just created.
-    """
+def _emit_people(builder: _EventBuilder, people: list[tuple[str, str, str, str]]) -> None:
     group_ids_by_name = {
         str(event.payload["group"]["name"]): str(event.payload["group"]["id"])
         for event in builder.events
@@ -300,10 +255,6 @@ def _emit_people(
         )
 
 
-# ----------------------------------------------------------------------
-# Mock data
-# ----------------------------------------------------------------------
-
 FIRST_NAMES: tuple[str, ...] = (
     "Ada", "John", "Grace", "Amara", "Chidi", "Ngozi", "Tunde", "Fatima", "Emeka", "Zainab",
     "Kwame", "Aisha", "Sekou", "Yemi", "Nadia", "Obi", "Lerato", "Hassan", "Ifeoma", "Musa",
@@ -318,9 +269,6 @@ LAST_NAMES: tuple[str, ...] = (
     "Umeh", "Vandi", "Wanjiru", "Yakubu", "Zulu", "Anyanwu", "Boateng", "Coker", "Danso", "Eshiet",
 )
 
-#: Stock levels used when mocking equipment, keyed by ``(category, subcategory)``.
-#: Deliberately aligned with :data:`SEED_TAXONOMY` so mocked resources always
-#: land on a taxonomy node that exists; ``(typical stock, procurement target)``.
 MOCK_STOCK: dict[tuple[str, str], tuple[int, int]] = {
     ("Electronics", "desktop-computer"): (12, 4),
     ("Electronics", "laptop"): (25, 6),
@@ -333,7 +281,6 @@ MOCK_STOCK: dict[tuple[str, str], tuple[int, int]] = {
     ("Utilities", "facility-access"): (8, 2),
 }
 
-#: Every ``(category, subcategory, stock, needed)`` slot, in taxonomy order.
 MOCK_SLOTS: tuple[tuple[str, str, int, int], ...] = tuple(
     (category_name, subcategory_name, *MOCK_STOCK[(category_name, subcategory_name)])
     for category_name, subcategory_names in SEED_TAXONOMY
@@ -352,12 +299,6 @@ def mock_events(
     seed: int = 20260101,
     start: datetime | None = None,
 ) -> list[Event]:
-    """Deterministically generate a batch of mock events.
-
-    The generator is seeded, so identical arguments always yield identical
-    events — the same property the test suite relies on. Counts are unbounded:
-    the only limits are the arguments and available memory (BUILD_PLAN §3).
-    """
     if min(fellows, piscine, equipment, cohorts, trials, loans) < 0:
         raise ValueError("mock counts must not be negative")
 
@@ -377,7 +318,6 @@ def mock_events(
 
 
 def _mock_resources(rng: random.Random, count: int) -> list[dict[str, object]]:
-    """Spread ``count`` resources evenly across the equipment palette."""
     if count <= 0:
         return []
     existing: list[str] = []
@@ -427,12 +367,6 @@ def _mock_people(
 
 
 def _unique_names(rng: random.Random, count: int) -> list[str]:
-    """``count`` distinct ``First Last`` names.
-
-    Draws from the full cross product so thousands of borrowers are possible
-    without collisions; a numeric suffix is the last resort once the pool is
-    exhausted.
-    """
     pool = [f"{first} {last}" for first in FIRST_NAMES for last in LAST_NAMES]
     rng.shuffle(pool)
     if count <= len(pool):
@@ -449,13 +383,11 @@ def _unique_names(rng: random.Random, count: int) -> list[str]:
 
 
 def _emit_loans(builder: _EventBuilder, rng: random.Random, count: int) -> None:
-    """Generate checkout history, leaving a realistic share still open.
-
-    Roughly a third of generated loans stay outstanding so the overdue and
-    "currently borrowed" reports have something to report on.
-    """
     resources = [
-        (str(event.payload["resource"]["id"]), int(event.payload["resource"]["available_quantity"]))
+        (
+            str(event.payload["resource"]["id"]),
+            int(event.payload["resource"]["available_quantity"]),
+        )
         for event in builder.events
         if event.event_type is EventType.RESOURCE_CREATED
     ]
@@ -467,7 +399,9 @@ def _emit_loans(builder: _EventBuilder, rng: random.Random, count: int) -> None:
     if not resources or not people:
         return
 
-    outstanding: dict[str, int] = {resource_id: available for resource_id, available in resources}
+    outstanding: dict[str, int] = {
+        resource_id: available for resource_id, available in resources
+    }
     transaction_counter = 0
     loan_index = 0
 
@@ -503,7 +437,6 @@ def _emit_loans(builder: _EventBuilder, rng: random.Random, count: int) -> None:
         outstanding[resource_id] = available - quantity
 
         loan_index += 1
-        # Two thirds come back; the rest stay open to exercise overdue logic.
         if loan_index % 3 != 0:
             transaction_counter += 1
             returned_at = builder.tick(seconds=rng.randint(3600, 1209600))

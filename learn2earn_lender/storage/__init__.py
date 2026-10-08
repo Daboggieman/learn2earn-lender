@@ -1,5 +1,3 @@
-"""Persistence: paths, JSON I/O, the event log, and the projections built from it."""
-
 from __future__ import annotations
 
 from .paths import DataPaths

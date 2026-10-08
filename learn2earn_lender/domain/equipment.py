@@ -1,14 +1,3 @@
-"""The equipment (resource) entity.
-
-The central invariant of the whole application lives here::
-
-    total_quantity = available + issued + faulty + damaged + missing + retired
-
-``good`` is not an independent bucket — it is exactly the units that are
-either on the shelf or out on loan, so it is exposed as a derived property
-rather than stored.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -21,12 +10,9 @@ from ..validators import strings
 from ..validators.ids import next_sequential_id, validate_id
 
 LOW_STOCK_THRESHOLD = 3
-"""Resources with fewer than this many available units are "low stock" (BUILD_PLAN §10)."""
 
 
 class Condition(str, Enum):
-    """Physical state of a unit of equipment."""
-
     GOOD = "good"
     FAULTY = "faulty"
     DAMAGED = "damaged"
@@ -35,7 +21,6 @@ class Condition(str, Enum):
 
     @classmethod
     def parse(cls, value: object) -> "Condition":
-        """Accept a ``Condition``, or a case-insensitive string name."""
         if isinstance(value, cls):
             return value
         text = str(value).strip().lower().replace(" ", "_").replace("-", "_")
@@ -48,7 +33,6 @@ class Condition(str, Enum):
             ) from exc
 
 
-#: Conditions that remove units from circulation. ``good`` is deliberately absent.
 UNAVAILABLE_CONDITIONS: tuple[Condition, ...] = (
     Condition.FAULTY,
     Condition.DAMAGED,
@@ -58,12 +42,6 @@ UNAVAILABLE_CONDITIONS: tuple[Condition, ...] = (
 
 
 class ResourceStatus(str, Enum):
-    """Lifecycle state of a resource record.
-
-    ``removed`` is a soft delete: the record stops being lendable but stays
-    readable so historical transactions still resolve (BUILD_PLAN §9.9).
-    """
-
     ACTIVE = "active"
     REMOVED = "removed"
 
@@ -78,14 +56,11 @@ class ResourceStatus(str, Enum):
 
 
 def empty_condition_counts() -> dict[str, int]:
-    """A zeroed bucket for every unavailable condition."""
     return {condition.value: 0 for condition in UNAVAILABLE_CONDITIONS}
 
 
 @dataclass
 class Resource:
-    """A lendable equipment type, e.g. a laptop, keyboard or chair."""
-
     id: str
     name: str
     category_id: str
@@ -100,18 +75,12 @@ class Resource:
     updated_at: str = ""
     notes: str = ""
 
-    # ------------------------------------------------------------------
-    # Derived values
-    # ------------------------------------------------------------------
-
     @property
     def good_quantity(self) -> int:
-        """Units fit for use: on the shelf plus currently on loan."""
         return self.available_quantity + self.issued_quantity
 
     @property
     def unavailable_quantity(self) -> int:
-        """Units out of circulation because of their condition."""
         return sum(self.condition_counts.values())
 
     @property
@@ -123,17 +92,11 @@ class Resource:
         return self.available_quantity < LOW_STOCK_THRESHOLD
 
     def condition_count(self, condition: Condition) -> int:
-        """Units currently in ``condition`` (``good`` is derived)."""
         if condition is Condition.GOOD:
             return self.good_quantity
         return self.condition_counts.get(condition.value, 0)
 
-    # ------------------------------------------------------------------
-    # Invariants
-    # ------------------------------------------------------------------
-
     def check_invariant(self) -> None:
-        """Raise :class:`InvariantViolation` if the quantities do not balance."""
         buckets = {
             "available": self.available_quantity,
             "issued": self.issued_quantity,
@@ -152,24 +115,13 @@ class Resource:
                 f"but {detail} sums to {accounted}"
             )
 
-    # ------------------------------------------------------------------
-    # Mutations — each leaves the invariant satisfied
-    # ------------------------------------------------------------------
-
     def require_active(self, action: str = "modify") -> None:
-        """Raise unless the resource can still be lent or changed."""
         if not self.is_active:
             raise ValidationError(
                 f"resource {self.id} is {self.status.value} and cannot be {action}d"
             )
 
     def set_total_quantity(self, new_total: int) -> None:
-        """Resize the fleet, keeping the balance sheet consistent.
-
-        Growing adds to ``available``. Shrinking takes from ``available`` and
-        is refused if too few units are on the shelf — the units on loan or
-        out of service are already spoken for.
-        """
         new_total = quantity_rules.require_non_negative(new_total, "total_quantity")
         delta = new_total - self.total_quantity
         if delta == 0:
@@ -191,11 +143,6 @@ class Resource:
     def transfer_condition(
         self, source: Condition, destination: Condition, quantity: int
     ) -> None:
-        """Move ``quantity`` units from one condition bucket to another.
-
-        Marking equipment faulty is ``transfer_condition(GOOD, FAULTY, n)``;
-        repairing it is ``transfer_condition(FAULTY, GOOD, n)``.
-        """
         quantity = quantity_rules.require_positive(quantity, "quantity")
         if source is destination:
             raise ValidationError(
@@ -214,34 +161,22 @@ class Resource:
         self.check_invariant()
 
     def issue_units(self, quantity: int) -> None:
-        """Send good units out on loan (available -> issued).
-
-        This is separate from :meth:`transfer_condition` because both buckets
-        are ``good``; the condition balance sheet is untouched by a loan.
-        """
         quantity = quantity_rules.require_positive(quantity, "quantity")
         if quantity > self.available_quantity:
             raise ValidationError(
                 f"resource {self.id}: cannot issue {quantity} unit(s); "
-                f"only {self.available_quantity} available "
-                f"(invariant: never issue more than available)"
+                f"only {self.available_quantity} available"
             )
         self.available_quantity -= quantity
         self.issued_quantity += quantity
         self.check_invariant()
 
     def release_units(self, quantity: int, condition_on_return: Condition) -> None:
-        """Take units back from a loan, landing them in ``condition_on_return``.
-
-        Returning a damaged laptop puts it in the ``damaged`` bucket rather
-        than back on the shelf, which is how condition drift is recorded.
-        """
         quantity = quantity_rules.require_positive(quantity, "quantity")
         if quantity > self.issued_quantity:
             raise ValidationError(
                 f"resource {self.id}: cannot return {quantity} unit(s); "
-                f"only {self.issued_quantity} are currently on loan "
-                f"(invariant: never over-return)"
+                f"only {self.issued_quantity} are currently on loan"
             )
         self.issued_quantity -= quantity
         self._adjust_condition(condition_on_return, quantity)
@@ -257,10 +192,6 @@ class Resource:
                 f"resource {self.id}: {condition.value} would become negative"
             )
         self.condition_counts[condition.value] = current
-
-    # ------------------------------------------------------------------
-    # Serialisation
-    # ------------------------------------------------------------------
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -281,11 +212,6 @@ class Resource:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "Resource":
-        """Build a resource from persisted data, validating as we go.
-
-        Raises :class:`ValidationError` on structurally bad input rather than
-        letting a ``KeyError`` escape, so import errors stay reportable.
-        """
         if not isinstance(data, dict):
             raise ValidationError(
                 f"resource record must be an object, got {type(data).__name__}"
@@ -307,7 +233,6 @@ class Resource:
         for key, value in raw_counts.items():
             condition = Condition.parse(key)
             if condition is Condition.GOOD:
-                # ``good`` is derived; accept it on input and ignore it.
                 continue
             counts[condition.value] = quantity_rules.require_non_negative(
                 value, f"condition_counts.{condition.value}"
@@ -348,5 +273,4 @@ class Resource:
 
 
 def make_resource_id(existing: list[str]) -> str:
-    """Next free ``R###`` identifier."""
     return next_sequential_id("R", existing)

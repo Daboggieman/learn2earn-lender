@@ -1,11 +1,3 @@
-"""Projections: the current state, rebuilt by replaying the event log.
-
-Nothing here is authoritative. ``data/current/*.json`` is written for humans
-and for fast inspection, but it can be deleted at any time and regenerated
-from ``data/transactions/`` — which is exactly why the two can never
-silently disagree about what happened.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -24,7 +16,6 @@ from . import json_repository
 from .paths import DataPaths
 from .transaction_log import TransactionLog
 
-#: Fields of a resource that a ``resource.updated`` event is allowed to touch.
 RESOURCE_UPDATE_FIELDS = frozenset(
     {"name", "category_id", "subcategory_id", "needed_quantity", "notes", "total_quantity"}
 )
@@ -35,8 +26,6 @@ PERSON_UPDATE_FIELDS = frozenset({"name", "group_id", "type", "status", "notes"}
 
 @dataclass
 class State:
-    """In-memory current state, as rebuilt from the log."""
-
     resources: dict[str, Resource] = field(default_factory=dict)
     taxonomy: dict[str, taxonomy_models.TaxonomyNode] = field(default_factory=dict)
     groups: dict[str, group_models.Group] = field(default_factory=dict)
@@ -45,16 +34,12 @@ class State:
     events_applied: int = 0
     last_event_at: str | None = None
 
-    # -- scoped lookups -------------------------------------------------
-
     def active_resources(self) -> list[Resource]:
-        """Resources that can still be lent, sorted by ID."""
         return sorted(
             (r for r in self.resources.values() if r.is_active), key=lambda r: r.id
         )
 
     def resources_in_category(self, category_id: str) -> list[Resource]:
-        """Resources directly under a category, sorted by ID."""
         return sorted(
             (r for r in self.resources.values() if r.category_id == category_id),
             key=lambda r: r.id,
@@ -72,11 +57,14 @@ class State:
             key=lambda node: node.name.lower(),
         )
 
-    def subcategories(self, category_id: str | None = None) -> list[taxonomy_models.TaxonomyNode]:
+    def subcategories(
+        self, category_id: str | None = None
+    ) -> list[taxonomy_models.TaxonomyNode]:
         nodes = [
             node
             for node in self.taxonomy.values()
-            if node.is_subcategory and (category_id is None or node.parent_id == category_id)
+            if node.is_subcategory
+            and (category_id is None or node.parent_id == category_id)
         ]
         return sorted(nodes, key=lambda node: node.name.lower())
 
@@ -99,7 +87,6 @@ class State:
         )
 
     def open_loans(self, at: datetime | None = None) -> list[Transaction]:
-        """Loans with units still outstanding, oldest first."""
         return sorted(
             (loan for loan in self.loans.values() if not loan.is_returned),
             key=lambda loan: (loan.due_at, loan.transaction_id),
@@ -108,22 +95,21 @@ class State:
     def overdue_loans(self, at: datetime | None = None) -> list[Transaction]:
         return [loan for loan in self.open_loans(at) if loan.is_overdue(at)]
 
-    # -- required-record helpers ---------------------------------------
-    #
-    # These raise instead of returning ``None`` so a dangling reference shows
-    # up as a clear storage error at the point of use.
-
     def resource_or_raise(self, resource_id: str) -> Resource:
         try:
             return self.resources[resource_id]
         except KeyError as exc:
-            raise StorageError(f"event log references unknown resource {resource_id!r}") from exc
+            raise StorageError(
+                f"event log references unknown resource {resource_id!r}"
+            ) from exc
 
     def taxonomy_or_raise(self, node_id: str) -> taxonomy_models.TaxonomyNode:
         try:
             return self.taxonomy[node_id]
         except KeyError as exc:
-            raise StorageError(f"event log references unknown taxonomy node {node_id!r}") from exc
+            raise StorageError(
+                f"event log references unknown taxonomy node {node_id!r}"
+            ) from exc
 
     def group_or_raise(self, group_id: str) -> group_models.Group:
         try:
@@ -138,13 +124,7 @@ class State:
             raise StorageError(f"event log references unknown person {person_id!r}") from exc
 
 
-# ----------------------------------------------------------------------
-# Replay
-# ----------------------------------------------------------------------
-
-
 def rebuild(events: Iterable[Event]) -> State:
-    """Replay ``events`` in order and return the resulting state."""
     state = State()
     for event in events:
         apply_event(state, event)
@@ -152,10 +132,11 @@ def rebuild(events: Iterable[Event]) -> State:
 
 
 def apply_event(state: State, event: Event) -> None:
-    """Apply a single event to ``state`` in place."""
     handler = _HANDLERS.get(event.event_type)
     if handler is None:
-        raise StorageError(f"cannot replay unsupported event type {event.event_type.value!r}")
+        raise StorageError(
+            f"cannot replay unsupported event type {event.event_type.value!r}"
+        )
     handler(state, event)
     state.events_applied += 1
     state.last_event_at = event.occurred_at
@@ -163,7 +144,9 @@ def apply_event(state: State, event: Event) -> None:
 
 def _require(payload: Mapping[str, Any], key: str, event: Event) -> Any:
     if key not in payload:
-        raise StorageError(f"{event.event_type.value} event {event.event_id} is missing {key!r}")
+        raise StorageError(
+            f"{event.event_type.value} event {event.event_id} is missing {key!r}"
+        )
     return payload[key]
 
 
@@ -183,8 +166,6 @@ def _apply_resource_updated(state: State, event: Event) -> None:
             f"{event.event_id}: resource.updated cannot change {', '.join(sorted(unknown))}"
         )
 
-    # Total quantity goes through the dedicated method so the balance sheet
-    # is resized consistently rather than overwritten.
     if "total_quantity" in changes:
         resource.set_total_quantity(
             require_non_negative(changes.pop("total_quantity"), "total_quantity")
@@ -308,9 +289,6 @@ def _apply_loan_returned(state: State, event: Event) -> None:
         event.payload.get("condition_on_return", Condition.GOOD.value)
     )
     resource = state.resource_or_raise(loan.resource_id)
-    # Apply to the resource first: it enforces the over-return rule against
-    # issued_quantity, and the loan then enforces it against its own
-    # outstanding balance.
     resource.release_units(quantity, condition)
     resource.updated_at = event.occurred_at
     loan.apply_return(event.payload, event.occurred_at)
@@ -333,43 +311,53 @@ _HANDLERS = {
 }
 
 
-# ----------------------------------------------------------------------
-# Snapshots
-# ----------------------------------------------------------------------
-
-
 def load_state(paths: DataPaths, log: TransactionLog) -> State:
-    """Rebuild state by replaying the entire log.
-
-    The log is always the input — snapshots in ``current/`` are never read
-    back as truth, which is what lets them be stale, corrupt or deleted
-    without consequence.
-    """
     return rebuild(log.read_all())
 
 
 def write_snapshot(state: State, paths: DataPaths) -> None:
-    """Write the human-readable projections to ``data/current/``."""
     json_repository.write_json(
         paths.inventory_file,
         {
-            "generated_from": "data/transactions (rebuilt on every run)",
-            "resources": [resource.to_dict() for resource in sorted(state.resources.values(), key=lambda r: r.id)],
+            "resources": [
+                resource.to_dict()
+                for resource in sorted(state.resources.values(), key=lambda r: r.id)
+            ]
         },
     )
     json_repository.write_json(
         paths.taxonomy_file,
-        {"nodes": [node.to_dict() for node in sorted(state.taxonomy.values(), key=lambda n: n.id)]},
+        {
+            "nodes": [
+                node.to_dict()
+                for node in sorted(state.taxonomy.values(), key=lambda n: n.id)
+            ]
+        },
     )
     json_repository.write_json(
         paths.groups_file,
-        {"groups": [group.to_dict() for group in sorted(state.groups.values(), key=lambda g: g.id)]},
+        {
+            "groups": [
+                group.to_dict()
+                for group in sorted(state.groups.values(), key=lambda g: g.id)
+            ]
+        },
     )
     json_repository.write_json(
         paths.people_file,
-        {"people": [person.to_dict() for person in sorted(state.people.values(), key=lambda p: p.id)]},
+        {
+            "people": [
+                person.to_dict()
+                for person in sorted(state.people.values(), key=lambda p: p.id)
+            ]
+        },
     )
     json_repository.write_json(
         paths.loans_file,
-        {"loans": [loan.to_dict() for loan in sorted(state.loans.values(), key=lambda l: l.transaction_id)]},
+        {
+            "loans": [
+                loan.to_dict()
+                for loan in sorted(state.loans.values(), key=lambda l: l.transaction_id)
+            ]
+        },
     )

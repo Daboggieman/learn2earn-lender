@@ -1,5 +1,3 @@
-"""Validation primitives shared by the domain and service layers."""
-
 from __future__ import annotations
 
 from .dates import (

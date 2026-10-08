@@ -1,10 +1,3 @@
-"""Equipment taxonomy: categories and subcategories.
-
-Taxonomy is *data*, never hard-coded. The seed categories (electronics,
-accessories, utilities) are ordinary rows that a user can extend, rename or
-remove, and the same is true of every subcategory.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -17,8 +10,6 @@ from ..validators.ids import next_sequential_id, validate_id
 
 
 class TaxonomyType(str, Enum):
-    """A taxonomy node is either a top-level category or a child subcategory."""
-
     CATEGORY = "category"
     SUBCATEGORY = "subcategory"
 
@@ -48,8 +39,6 @@ class TaxonomyStatus(str, Enum):
 
 @dataclass
 class TaxonomyNode:
-    """A category (no parent) or a subcategory (parent required)."""
-
     id: str
     name: str
     type: TaxonomyType
@@ -71,7 +60,6 @@ class TaxonomyNode:
         return self.status is TaxonomyStatus.ACTIVE
 
     def check_shape(self) -> None:
-        """Categories have no parent; subcategories must have one."""
         if self.is_category and self.parent_id is not None:
             raise ValidationError(
                 f"category {self.id} must not have a parent_id (got {self.parent_id!r})"
