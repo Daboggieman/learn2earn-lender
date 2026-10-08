@@ -1,6 +1,6 @@
 {
   "date": "2026-10-08",
-  "count": 2,
+  "count": 5,
   "events": [
     {
       "event_id": "E-20261008-0001",
@@ -35,6 +35,57 @@
         "notes": "mock checkout"
       },
       "notes": "mock"
+    },
+    {
+      "event_id": "E-20261008-0003",
+      "event_type": "loan.checked_out",
+      "occurred_at": "2026-10-08T15:03:24",
+      "actor": "admin",
+      "payload": {
+        "transaction_id": "T000657",
+        "resource_id": "R001",
+        "borrower_id": "F001",
+        "quantity": 2,
+        "due_at": "2026-10-22T15:03:24",
+        "condition_on_issue": "good",
+        "issued_by": "admin",
+        "notes": ""
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0004",
+      "event_type": "loan.checked_out",
+      "occurred_at": "2026-10-08T15:03:25",
+      "actor": "admin",
+      "payload": {
+        "transaction_id": "T000658",
+        "resource_id": "R002",
+        "borrower_id": "F002",
+        "quantity": 3,
+        "due_at": "2026-10-22T15:03:25",
+        "condition_on_issue": "good",
+        "issued_by": "admin",
+        "notes": ""
+      },
+      "notes": ""
+    },
+    {
+      "event_id": "E-20261008-0005",
+      "event_type": "loan.returned",
+      "occurred_at": "2026-10-08T15:03:32",
+      "actor": "admin",
+      "payload": {
+        "transaction_id": "T000659",
+        "checkout_transaction_id": "T000657",
+        "resource_id": "R001",
+        "borrower_id": "F001",
+        "quantity": 1,
+        "condition_on_return": "good",
+        "returned_by": "admin",
+        "notes": ""
+      },
+      "notes": ""
     }
   ]
 }

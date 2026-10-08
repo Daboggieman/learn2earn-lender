@@ -7485,6 +7485,44 @@
       "notes": "mock checkout",
       "return_notes": "mock return",
       "status": "returned"
+    },
+    {
+      "transaction_id": "T000657",
+      "resource_id": "R001",
+      "borrower_id": "F001",
+      "transaction_type": "checkout",
+      "quantity": 2,
+      "outstanding_quantity": 1,
+      "returned_quantity": 1,
+      "issued_at": "2026-10-08T15:03:24",
+      "due_at": "2026-10-22T15:03:24",
+      "returned_at": "2026-10-08T15:03:32",
+      "condition_on_issue": "good",
+      "condition_on_return": "good",
+      "issued_by": "admin",
+      "returned_by": "admin",
+      "notes": "",
+      "return_notes": "",
+      "status": "active"
+    },
+    {
+      "transaction_id": "T000658",
+      "resource_id": "R002",
+      "borrower_id": "F002",
+      "transaction_type": "checkout",
+      "quantity": 3,
+      "outstanding_quantity": 3,
+      "returned_quantity": 0,
+      "issued_at": "2026-10-08T15:03:25",
+      "due_at": "2026-10-22T15:03:25",
+      "returned_at": null,
+      "condition_on_issue": "good",
+      "condition_on_return": null,
+      "issued_by": "admin",
+      "returned_by": null,
+      "notes": "",
+      "return_notes": "",
+      "status": "active"
     }
   ]
 }
