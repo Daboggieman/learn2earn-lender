@@ -19,6 +19,14 @@ examples:
   lender add-subcategory "Lab Gear" "Oscilloscopes"
   lender add-resource --name "Dell Latitude" --category Electronics --subcategory laptop --total 12
   lender mark-condition R001 faulty 1 --reason "screen flicker"
+  lender add-cohort cluster-5-mar
+  lender add-fellow "Ada Lovelace" --cohort cluster-5-mar
+  lender add-piscine "Alan Turing" --trial trial-period-1
+  lender checkout R001 F001 2 --days 7
+  lender return T000001 --condition damaged
+  lender history --borrower F001 --open
+  lender overdue
+  lender report-borrower-history F001
   lender find-by-category Electronics
   lender report-store-status
   lender report-low-stock

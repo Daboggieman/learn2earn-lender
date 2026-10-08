@@ -337,6 +337,135 @@ class PeopleCommandTests(CliTestCase):
         self.assertEqual(store.state.people["F004"].name, "Ada Lovelace")
 
 
+class LendingCommandTests(CliTestCase):
+    def setUp(self):
+        super().setUp()
+        self.seed()
+
+    def test_checkout_issues_units(self):
+        payload = self.run_json("checkout", "R001", "F001", "2", "--days", "7")
+        self.assertEqual(payload["transaction_id"], "T000001")
+        self.assertEqual(payload["quantity"], 2)
+        self.assertEqual(payload["status"], "active")
+
+    def test_checkout_reduces_availability(self):
+        self.run_cli("checkout", "R001", "F001", "3")
+        payload = self.run_json("find-resource", "R001")
+        self.assertEqual(payload[0]["available_quantity"], 7)
+        self.assertEqual(payload[0]["issued_quantity"], 3)
+
+    def test_checkout_beyond_availability_is_refused(self):
+        code, out, err = self.run_cli("checkout", "R001", "F001", "99")
+        self.assertEqual(code, 4)
+
+    def test_checkout_for_an_unknown_borrower_is_refused(self):
+        code, out, err = self.run_cli("checkout", "R001", "F999", "1")
+        self.assertEqual(code, 3)
+        self.assertNotIn("event log", err)
+
+    def test_checkout_for_an_unknown_resource_is_refused(self):
+        code, out, err = self.run_cli("checkout", "R999", "F001", "1")
+        self.assertEqual(code, 3)
+
+    def test_checkout_rejects_both_due_and_days(self):
+        code, out, err = self.run_cli(
+            "checkout", "R001", "F001", "1", "--due", "2027-01-01", "--days", "7"
+        )
+        self.assertEqual(code, 2)
+
+    def test_checkout_with_a_past_due_date_is_refused(self):
+        code, out, err = self.run_cli("checkout", "R001", "F001", "1", "--due", "2020-01-01")
+        self.assertEqual(code, 2)
+
+    def test_full_return_closes_the_loan(self):
+        self.run_cli("checkout", "R001", "F001", "2")
+        payload = self.run_json("return", "T000001")
+        self.assertEqual(payload["status"], "returned")
+        self.assertEqual(payload["outstanding_quantity"], 0)
+
+    def test_partial_then_final_return(self):
+        self.run_cli("checkout", "R001", "F001", "3")
+        partial = self.run_json("return", "T000001", "1")
+        self.assertEqual(partial["outstanding_quantity"], 2)
+        self.assertEqual(partial["status"], "active")
+        final = self.run_json("return", "T000001")
+        self.assertEqual(final["status"], "returned")
+
+    def test_returning_damaged_units_keeps_them_unavailable(self):
+        self.run_cli("checkout", "R001", "F001", "2")
+        self.run_cli("return", "T000001", "2", "--condition", "damaged")
+        payload = self.run_json("find-resource", "R001")
+        self.assertEqual(payload[0]["available_quantity"], 8)
+        self.assertEqual(payload[0]["condition_counts"]["damaged"], 2)
+
+    def test_over_return_is_refused(self):
+        self.run_cli("checkout", "R001", "F001", "2")
+        code, out, err = self.run_cli("return", "T000001", "5")
+        self.assertEqual(code, 2)
+
+    def test_returning_twice_is_refused(self):
+        self.run_cli("checkout", "R001", "F001", "1")
+        self.run_cli("return", "T000001")
+        code, out, err = self.run_cli("return", "T000001")
+        self.assertEqual(code, 4)
+
+    def test_returning_an_unknown_loan_is_refused(self):
+        code, out, err = self.run_cli("return", "T999999")
+        self.assertEqual(code, 3)
+
+    def test_history_lists_every_loan(self):
+        self.run_cli("checkout", "R001", "F001", "1")
+        self.run_cli("checkout", "R002", "F002", "1")
+        payload = self.run_json("history")
+        self.assertEqual(
+            [row["transaction_id"] for row in payload], ["T000001", "T000002"]
+        )
+
+    def test_history_filters_by_borrower(self):
+        self.run_cli("checkout", "R001", "F001", "1")
+        self.run_cli("checkout", "R002", "F002", "1")
+        payload = self.run_json("history", "--borrower", "F001")
+        self.assertEqual([row["borrower_id"] for row in payload], ["F001"])
+
+    def test_history_open_only_hides_returned_loans(self):
+        self.run_cli("checkout", "R001", "F001", "1")
+        self.run_cli("checkout", "R002", "F002", "1")
+        self.run_cli("return", "T000001")
+        payload = self.run_json("history", "--open")
+        self.assertEqual([row["transaction_id"] for row in payload], ["T000002"])
+
+    def test_history_is_empty_before_any_lending(self):
+        code, out, err = self.run_cli("history")
+        self.assertEqual(code, 0)
+        self.assertIn("No lending transactions", out)
+
+    def test_overdue_is_clear_when_nothing_is_late(self):
+        self.run_cli("checkout", "R001", "F001", "1", "--days", "7")
+        code, out, err = self.run_cli("overdue")
+        self.assertEqual(code, 0)
+        self.assertIn("No overdue loans", out)
+
+    def test_borrower_history_summarises_activity(self):
+        self.run_cli("checkout", "R001", "F001", "2")
+        self.run_cli("checkout", "R002", "F001", "1")
+        self.run_cli("return", "T000001")
+        payload = self.run_json("report-borrower-history", "F001")
+        self.assertEqual(payload["total_loans"], 2)
+        self.assertEqual(payload["lifetime_units"], 3)
+        self.assertEqual(payload["open_loan_ids"], ["T000002"])
+        self.assertEqual(payload["overdue_loan_ids"], [])
+
+    def test_borrower_history_for_an_unknown_borrower_is_refused(self):
+        code, out, err = self.run_cli("report-borrower-history", "F999")
+        self.assertEqual(code, 3)
+
+    def test_lending_survives_a_log_replay(self):
+        self.run_cli("checkout", "R001", "F001", "2")
+        store = Store.open(self.data_dir)
+        self.assertEqual(store.state.resources["R001"].issued_quantity, 2)
+        self.assertEqual(len(store.state.loans), 1)
+
+
 class ReportCommandTests(CliTestCase):
     def setUp(self):
         super().setUp()

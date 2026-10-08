@@ -235,7 +235,10 @@ class HistoryTests(LendingTestCase):
 
     def test_history_filters_by_resource(self):
         self.assertEqual(len(self.lending.history(resource="R001")), 2)
-        self.assertEqual(self.lending.history(resource="R999"), [])
+
+    def test_history_on_an_unknown_resource_is_reported(self):
+        with self.assertRaises(NotFoundError):
+            self.lending.history(resource="R999")
 
     def test_history_filters_by_borrower(self):
         self.assertEqual(
